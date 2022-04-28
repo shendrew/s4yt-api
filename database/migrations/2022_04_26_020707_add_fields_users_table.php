@@ -28,14 +28,8 @@ class AddFieldsUsersTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('users', 'school'))
-        {
-            Schema::table('users', function (Blueprint $table) {
-                $table->dropColumn('school');
-            });
-        }
-
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('school');
             $table->dropForeign('users_education_id_foreign');
             $table->dropColumn('education_id');
             $table->dropForeign('users_grade_id_foreign');
