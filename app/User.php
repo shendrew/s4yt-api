@@ -4,6 +4,7 @@ namespace App;
 
 use App\Traits\Uuids;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -18,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'school', 'education_id', 'grade_id'
     ];
 
     /**
@@ -38,4 +39,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function education_id() : HasOne {
+        return $this->HasOne(Education::class);
+    }
+
+    public function grade_id() : HasOne {
+        return $this->HasOne(Grade::class);
+    }
 }
