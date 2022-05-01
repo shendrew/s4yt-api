@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\Referable;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Uuids;
+    use Notifiable, HasRoles, Uuids, Referable;
 
     /**
      * The attributes that are mass assignable.
