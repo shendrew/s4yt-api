@@ -14,7 +14,7 @@ class AddReferralFieldsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('referred_by')->nullable()->constrained('users');
+            $table->foreignUuid('referred_by')->nullable()->constrained('users');
             $table->string('referral_code')->unique();
         });
     }
