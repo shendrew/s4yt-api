@@ -54,7 +54,7 @@ class AuthController extends Controller
             return $this->sendError('Credentials not valid', [], 401);
         }
 
-        $token = $user->createToken(env('APP_NAME'))->plainTextToken;
+        $token = $user->createToken(env('APP_NAME'))->accessToken;
 
         return $this->sendResponse(
             [

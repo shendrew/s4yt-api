@@ -19,5 +19,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
+
+    Route::get('/location/countries', [\App\Http\Controllers\Api\LocationController::class, 'getCountries']);
+    Route::get('/location/states', [\App\Http\Controllers\Api\LocationController::class, 'getStates']);
     Route::post('/logout', [AuthController::class, 'logout']);;
 });
