@@ -27,7 +27,8 @@ class AddReferralFieldsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('referred_by');
+            $table->dropForeign(['referred_by']);
+            $table->dropColumn('referred_by');
             $table->dropColumn('referral_code');
         });
     }
