@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StatesRequest;
+use App\Http\Requests\CitiesRequest
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -42,7 +43,26 @@ class LocationController extends Controller
                 'country' =>  $validated['ciso'],
                 'countries' => $states->json()
             ],
-            "List of states"
+            "List of states of countries"
+        );
+    }
+
+    public function getCities(CitiesRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $cities = Http::withoutVerifying()
+            ->withHeaders([
+                'X-CSCAPI-KEY' => config('cities_api.api_key'),
+            ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states' . '/' . $validated['siso'] . '/cities');
+
+        return $this->sendResponse(
+            [
+                'country' =>  $validated['ciso'],
+                'states' => $states->json()
+                'cities' => $cities->json()
+            ],
+            "List of cities of states of country"
         );
     }
 }
