@@ -22,5 +22,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/location/countries', [\App\Http\Controllers\Api\LocationController::class, 'getCountries']);
     Route::get('/location/states', [\App\Http\Controllers\Api\LocationController::class, 'getStates']);
+    Route::get('/location/cities', [\App\Http\Controllers\Api\LocationController::class, 'getCities']);
     Route::post('/logout', [AuthController::class, 'logout']);;
 });
