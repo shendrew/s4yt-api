@@ -24,7 +24,8 @@ class CitiesRequest extends FormRequest
     public function rules()
     {
         return [
-            'siso' => 'required|string|min:3|max:3'
+            'ciso' => 'required|string|min:2|max:2',
+            'siso' => 'required|string|min:3|max:3',
         ];
     }
 }

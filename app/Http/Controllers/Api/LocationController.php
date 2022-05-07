@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StatesRequest;
-use App\Http\Requests\CitiesRequest
+use App\Http\Requests\CitiesRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -41,9 +41,9 @@ class LocationController extends Controller
         return $this->sendResponse(
             [
                 'country' =>  $validated['ciso'],
-                'countries' => $states->json()
+                'states' => $states->json()
             ],
-            "List of states of countries"
+            "List of states of country"
         );
     }
 
@@ -59,10 +59,10 @@ class LocationController extends Controller
         return $this->sendResponse(
             [
                 'country' =>  $validated['ciso'],
-                'states' => $states->json()
+                'state' => $validated['siso'],
                 'cities' => $cities->json()
             ],
-            "List of cities of states of country"
+            "List of cities of state of country"
         );
     }
 }
