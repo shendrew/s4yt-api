@@ -16,7 +16,7 @@ class AddFieldsUsersTable extends Migration
         Schema::table('users', function (Blueprint $table)
         {
             $table->string('school')->nullable();
-            $table->foreignId('education_id')->constrained('educations');
+            $table->foreignId('education_id')->nullable()->constrained('educations');
             $table->foreignId('grade_id')->nullable()->constrained('grades');
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\HasCoins;
 use App\Traits\Uuids;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -13,7 +14,7 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Uuids, Referable, HasApiTokens;
+    use Notifiable, HasRoles, Uuids, Referable, HasApiTokens, HasCoins;
 
     /**
      * The attributes that are mass assignable.
