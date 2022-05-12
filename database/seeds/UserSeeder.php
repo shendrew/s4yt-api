@@ -27,5 +27,10 @@ class UserSeeder extends Seeder
         ]);
 
         $admin->assignRole(\App\Role::ADMIN);
+
+        if (env('APP_ENV') != 'production')
+        {
+            factory('App\User', 10)->create();
+        }
     }
 }
