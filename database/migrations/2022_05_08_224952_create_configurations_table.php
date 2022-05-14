@@ -18,6 +18,7 @@ class CreateConfigurationsTable extends Migration
             $table->string("key");
             $table->string("value");
             $table->text("description")->nullable();
+            $table->string("data_type");
             $table->timestamps();
         });
     }

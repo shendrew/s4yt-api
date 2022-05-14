@@ -17,10 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::view('admin', 'admin');
-    Route::prefix('/admin')->group(function(){
-        Route::resource('player', 'PlayerController');
-    });
+Route::middleware('auth')->prefix('/admin')->group(function () {
+    Route::view('/', 'admin');
+    Route::resource('player', 'PlayerController');
+    Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
 });
 

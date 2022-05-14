@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Configuration extends Model
 {
     const INITIAL_COINS = "initial_coins";
+    const GAME_START = 'game_start';
+    const GAME_END = 'game_end';
+    const WINNERS_ANNOUNCED = 'winners_announced';
+    const LOGIN_DISABLED = 'login_disabled';
 
 
     /**
