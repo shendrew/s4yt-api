@@ -5,12 +5,14 @@ namespace App;
 use App\Traits\HasCoins;
 use App\Traits\Uuids;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Traits\Referable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
@@ -49,5 +51,13 @@ class User extends Authenticatable
 
     public function grade_id() : HasOne {
         return $this->HasOne(Grade::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 }

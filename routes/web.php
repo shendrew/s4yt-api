@@ -18,6 +18,9 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::view('home', 'home');
+    Route::view('admin', 'admin');
+    Route::prefix('/admin')->group(function(){
+        Route::resource('player', 'PlayerController');
+    });
 });
 
