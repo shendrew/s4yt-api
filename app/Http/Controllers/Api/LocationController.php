@@ -7,6 +7,7 @@ use App\Http\Requests\StatesRequest;
 use App\Http\Requests\CitiesRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class LocationController extends Controller
@@ -16,10 +17,12 @@ class LocationController extends Controller
 
     public function getCountries(Request $request): JsonResponse
     {
-        $countries = Http::withoutVerifying()
-        ->withHeaders([
-            'X-CSCAPI-KEY' => config('cities_api.api_key'),
-        ])->get(self::CITIES_API_URL . '/');
+        $countries = Cache::remember('get-countries', 60*60*24*7, function() {
+           return  Http::withoutVerifying()
+               ->withHeaders([
+                   'X-CSCAPI-KEY' => config('cities_api.api_key'),
+               ])->get(self::CITIES_API_URL . '/');
+        });
 
         return $this->sendResponse(
             [
@@ -33,10 +36,12 @@ class LocationController extends Controller
     {
         $validated = $request->validated();
 
-        $states = Http::withoutVerifying()
-            ->withHeaders([
-                'X-CSCAPI-KEY' => config('cities_api.api_key'),
-            ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states');
+        $states = Cache::remember('get-states', 60*60*24*7, function() use ($validated) {
+            return  Http::withoutVerifying()
+                ->withHeaders([
+                    'X-CSCAPI-KEY' => config('cities_api.api_key'),
+                ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states');
+        });
 
         return $this->sendResponse(
             [
@@ -51,10 +56,12 @@ class LocationController extends Controller
     {
         $validated = $request->validated();
 
-        $cities = Http::withoutVerifying()
-            ->withHeaders([
-                'X-CSCAPI-KEY' => config('cities_api.api_key'),
-            ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states' . '/' . $validated['siso'] . '/cities');
+        $cities = Cache::remember('get-cities', 60*60*24*7, function() use ($validated) {
+            return Http::withoutVerifying()
+                ->withHeaders([
+                    'X-CSCAPI-KEY' => config('cities_api.api_key'),
+                ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states' . '/' . $validated['siso'] . '/cities');
+        });
 
         return $this->sendResponse(
             [
