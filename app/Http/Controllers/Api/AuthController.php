@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use App\User;
 use App\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -24,6 +25,8 @@ class AuthController extends Controller
 
         $validated = $request->validated();
         $player = $playerService->addPlayer($validated);
+
+        Log::info('User {$player->name} registered successfully.', ['id' => $player->id]);
 
         return $this->sendResponse(
             [
