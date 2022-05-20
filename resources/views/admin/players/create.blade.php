@@ -5,7 +5,7 @@
     <div class="container">
         <!-- title -->
         <div class="container content-section">
-            <h2 class="col-lg-12 text-center">New student</h2>
+            <h2 class="col-lg-12 text-center">New Player</h2>
         </div>
         <!-- resource actions -->
         <div class="container content-section col-lg-10 offset-lg-1 mt-3">

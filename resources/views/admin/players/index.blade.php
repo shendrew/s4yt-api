@@ -30,6 +30,22 @@
                             <td>{{ explode('-',$player->id)[0] }}</td>
                             <td>{{ $player->name }}</td>
                             <td>{{ $player->email }}</td>
+                            <td>
+                                <div class="container d-flex justify-content-center">
+                                    @role('super_admin|admin')
+                                        <a type="submit" class="btn btn-primary text-white" href="{{ route('player.show', $player->id) }}">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <form action="{{ route('player.destroy', $player->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger ml-2 text-white ms-2">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endrole
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 @else

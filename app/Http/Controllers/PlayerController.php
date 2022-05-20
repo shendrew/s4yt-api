@@ -6,6 +6,7 @@ use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class PlayerController extends Controller
 {
@@ -33,5 +34,23 @@ class PlayerController extends Controller
     public function create(): View
     {
         return view('admin.players.create');
+    }
+
+    public function show($id): View
+    {
+        $user = User::find($id);
+        return view('admin.players.show-edit');
+    }
+
+    public function destroy($id): RedirectResponse
+    {
+        $player = User::find($id);
+
+        if(!$player) {
+            return redirect()->route('player.index')->with('error', 'Player not found.');
+        }
+
+        User::destroy($player->id);
+        return redirect()->route('player.index')->with('success', 'Player deleted successfully.');
     }
 }
