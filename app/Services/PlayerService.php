@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+
 use App\Coin;
 use App\Configuration;
 use App\Role;

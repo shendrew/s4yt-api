@@ -30,7 +30,12 @@ class UserSeeder extends Seeder
 
         if (env('APP_ENV') != 'production')
         {
-            factory('App\User', 10)->create();
+            factory('App\User', 8)->create()->each(function ($user){
+                $user->assignRole(\App\Role::PLAYER);
+            });
+            factory('App\User', 2)->create()->each(function ($user){
+                $user->assignRole(\App\Role::BU_PLAYER);
+            });
         }
     }
 }
