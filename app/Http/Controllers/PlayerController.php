@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Education;
 use App\Role;
+use App\Services\LocationService;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -30,11 +32,15 @@ class PlayerController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param LocationService $locationService
      * @return View
      */
-    public function create(): View
+    public function create(LocationService $locationService): View
     {
-        return view('admin.players.create');
+        $educations = Education::all();
+        $countries = $locationService->getCountries();
+        dd($countries->body());
+        return view('admin.players.create', compact('educations', 'countries'));
     }
 
     /**

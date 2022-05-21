@@ -34,6 +34,12 @@
     </div>
 </div>
 
+
+<script src="{{ Illuminate\Support\Facades\URL::asset('js/jquery.min.js') }}"></script>
+<script type="text/javascript">
+    @yield ('footer_scripts')
+</script>
+
 <script src="{{ asset('js/admin.js') }}" defer></script>
 </body>
 </html>

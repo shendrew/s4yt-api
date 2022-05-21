@@ -2,6 +2,7 @@
 
 @section('content')
 
+    {{ json_encode($countries) }}
     <div class="container">
         <!-- title -->
         <div class="container content-section">
@@ -37,8 +38,20 @@
                     <input type="email" class="form-control" id="preferred_email" name="preferred_email">
                 </div>
                 <div class="form-group mt-2">
+                    <label for="education">Education</label>
+                    <select class="form-select form-control" aria-label="Default select example" id="education" name="education">
+                        <option value="0" selected>Choose an option</option>
+                        @foreach($educations as $education)
+                            <option value="{{ $education->id }}">{{ $education->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group mt-2" id="institution_input">
                     <label for="institution">Institution</label>
                     <input type="text" class="form-control" id="institution" name="institution">
+                    @if ($errors->has('institution'))
+                        <small id="institution_error" class="form-text text-danger">{{ $errors->first('institution') }}</small>
+                    @endif
                 </div>
                 <div class="form-group mt-2">
                     <label for="grade">Grade (Required)</label>
@@ -48,19 +61,15 @@
                     @endif
                 </div>
                 <div class="form-group mt-2">
-                    <label for="phone">Phone</label>
-                    <input type="text" class="form-control" id="phone" name="phone">
-                </div>
-                <div class="form-group mt-2">
-                    <label for="dob">Birth date</label>
-                    <input type="text" class="form-control" id="dob" name="dob" aria-describedby="dob_format">
-                    <small id="dob_format" class="form-text text-dark">Format: mm-dd-yyyy</small>
-                </div>
-                <div class="form-group mt-2">
-                    <label for="city_state">City/State (Required)</label>
-                    <input type="text" class="form-control" id="city_state" name="city_state" aria-describedby="city_state_error">
-                    @if ($errors->has('city_state'))
-                        <small id="city_state_error" class="form-text text-danger">{{ $errors->first('city_state') }}</small>
+                    <label for="country">Country (Required)</label>
+                    <input type="text" class="form-control" list="countries" id="country" name="country" placeholder="Type to search..." aria-describedby="country_error">
+                    <datalist id="countries">
+                        @foreach($countries as $country)
+
+                        @endforeach
+                    </datalist>
+                    @if ($errors->has('country'))
+                        <small id="country_error" class="form-text text-danger">{{ $errors->first('country') }}</small>
                     @endif
                 </div>
                 <div class="form-group mt-3">
@@ -70,4 +79,17 @@
         </div>
     </div>
 
+@endsection
+
+@section('footer_scripts')
+    $(document).ready(function(){
+
+        // Hide at load page
+        $("#institution_input").hide();
+
+        // Conditional for display
+        $('#education').on('change', function() {
+            this.value == 1 ? $("#institution_input").show() :  $("#institution_input").hide();
+        });
+    });
 @endsection

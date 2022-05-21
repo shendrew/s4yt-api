@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StatesRequest;
 use App\Http\Requests\CitiesRequest;
+use App\Services\LocationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -15,14 +16,9 @@ class LocationController extends Controller
 
     const CITIES_API_URL = 'https://api.countrystatecity.in/v1/countries';
 
-    public function getCountries(Request $request): JsonResponse
+    public function getCountries(Request $request, LocationService $locationService): JsonResponse
     {
-        $countries = Cache::remember('get-countries', 60*60*24*7, function() {
-           return  Http::withoutVerifying()
-               ->withHeaders([
-                   'X-CSCAPI-KEY' => config('cities_api.api_key'),
-               ])->get(self::CITIES_API_URL . '/');
-        });
+        $countries = $locationService->getCountries();
 
         return $this->sendResponse(
             [
