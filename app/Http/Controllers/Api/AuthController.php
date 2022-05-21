@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\User;
 use App\Role;
 use Illuminate\Support\Facades\Hash;
@@ -16,24 +16,19 @@ class AuthController extends Controller
     /**
      * Method registers new user
      * @param RegisterRequest $request
+     * @param PlayerService $playerService
      * @return JsonResponse
      */
-    public function register(RegisterRequest $request): JsonResponse
+    public function register(RegisterRequest $request, PlayerService $playerService): JsonResponse
     {
+
         $validated = $request->validated();
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password'])
-        ]);
-
-        $user->assignRole(Role::PLAYER);
+        $player = $playerService->addPlayer($validated);
 
         return $this->sendResponse(
             [
-                'name' => $user->name,
-                'email' => $user->email
+                'name' => $player->name,
+                'email' => $player->email
             ],
             "User registered successfully",
             201
