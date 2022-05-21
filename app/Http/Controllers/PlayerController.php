@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StorePlayerRequest;
 
 class PlayerController extends Controller
 {
@@ -36,10 +37,50 @@ class PlayerController extends Controller
         return view('admin.players.create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StorePlayerRequest $request
+     * @return RedirectResponse
+     */
+    public function store(StorePlayerRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        (new PlayerService())->addPlayer($validated, Configuration::getValueByKey(Configuration::REGISTER_TICKETS));
+        return redirect()->route('player.index')->with('success', 'Player added successfully.');
+    }
+
     public function show($id): View
     {
         $user = User::find($id);
         return view('admin.players.show-edit');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UpdatePlayerRequest $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function update(UpdatePlayerRequest $request, $id, PlayerService $playerService): RedirectResponse
+    {
+        $validated = $request->validated();
+        $player = User::find($id);
+
+        if(!$player) {
+            return redirect()->route('player.index')->with('error', 'Player not found.');
+        }
+
+        if($player->email != $validated['email']) {
+            $request->validate([
+                'email' => 'required|string|email|unique:users',
+            ]);
+        }
+
+        $playerService->updatePlayer($validated, $player);
+
+        return redirect()->route('player.index')->with('success', 'Player updated successfully.');
     }
 
     public function destroy($id): RedirectResponse
