@@ -1,4 +1,4 @@
-<nav class="bg-dark text-white vh-100 col-2">
+<nav class="bg-dark text-white vh-100 col-2 sticky-top">
     <div class="sidebar-header bg-dark text-center border-bottom border-white">
         <img src="{{asset('storage/logo.png')}}" alt="logo_alt" class="img-fluid col-12 my-3">
     </div>

@@ -71,11 +71,10 @@
                     @endif
                 </div>
                 <div class="form-group mt-2">
-                    <label for="state">Province/State (Required)</label>
-                    <input type="text" class="form-control" list="states" id="state" name="state" placeholder="Type to search..." aria-describedby="state_error">
-                    <datalist id="states">
-
-                    </datalist>
+                    <label for="state">Province/State (Required) <i class="fas fa-spinner fa-spin-pulse" id="state-spinner"></i></label>
+                    <select class="form-select form-control" id="state" name="state" disabled>
+                        <option  value="0" selected>Select a province/state...</option>
+                    </select>
                     @if ($errors->has('state'))
                         <small id="state_error" class="form-text text-danger">{{ $errors->first('state') }}</small>
                     @endif
@@ -94,6 +93,7 @@
 
         // Hide at load page
         $("#institution_input").hide();
+        $("#state-spinner").hide();
 
         // Conditional for display
         $('#education').on('change', function() {
@@ -103,11 +103,44 @@
         $('#country').on('input', function(){
 
             // Get option from DOM
-            var option = $('#countries [value="' + $(this).val() + '"]');
+            const option = $('#countries [value="' + $(this).val() + '"]');
+            // Constants definitions
+            const stateSpinner = $("#state-spinner");
+            const stateSelect = $("#state");
+            // Disabled state input
+            stateSelect.prop('disabled', true);
+            // Remove potential children except first
+            $("#state option").slice(1).remove();
 
             // Check option is valid
             if(option.length == 1){
-                console.log(option.data('iso'));
+
+                // Show loader
+                stateSpinner.show();
+                // Get data
+                const ciso = option.data('iso');
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type:'GET',
+                    url:"{{ route('location.states') }}",
+                    data:{ciso:ciso},
+                    success:function(data){
+                        let states = data.data.states;
+                        $.each(states, function(i, state) {
+                            stateSelect.append('<option value="' + state.iso2 + '">' +  state.name + '</option>');
+                        });
+                        // Hide spinner
+                        stateSpinner.hide();
+                        // Enable select
+                        stateSelect.prop('disabled', false);
+                    }
+                });
             }
         });
     });
