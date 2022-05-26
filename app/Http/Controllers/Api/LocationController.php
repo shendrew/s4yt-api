@@ -16,7 +16,7 @@ class LocationController extends Controller
 
     const CITIES_API_URL = 'https://api.countrystatecity.in/v1/countries';
 
-    public function getCountries(Request $request, LocationService $locationService): JsonResponse
+    public function getCountries(LocationService $locationService): JsonResponse
     {
         $countries = $locationService->getCountries();
 
@@ -32,12 +32,10 @@ class LocationController extends Controller
     {
         $validated = $request->validated();
 
-        $states = Cache::remember('get-states', 60*60*24*7, function() use ($validated) {
-            return  Http::withoutVerifying()
-                ->withHeaders([
-                    'X-CSCAPI-KEY' => config('cities_api.api_key'),
-                ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states');
-        });
+        $states = Http::withoutVerifying()
+            ->withHeaders([
+                'X-CSCAPI-KEY' => config('cities_api.api_key'),
+            ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states');
 
         return $this->sendResponse(
             [
@@ -52,12 +50,10 @@ class LocationController extends Controller
     {
         $validated = $request->validated();
 
-        $cities = Cache::remember('get-cities', 60*60*24*7, function() use ($validated) {
-            return Http::withoutVerifying()
-                ->withHeaders([
-                    'X-CSCAPI-KEY' => config('cities_api.api_key'),
-                ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states' . '/' . $validated['siso'] . '/cities');
-        });
+        $cities = Http::withoutVerifying()
+            ->withHeaders([
+                'X-CSCAPI-KEY' => config('cities_api.api_key'),
+            ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states' . '/' . $validated['siso'] . '/cities');
 
         return $this->sendResponse(
             [

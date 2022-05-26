@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Configuration;
 use App\Education;
 use App\Role;
 use App\Services\LocationService;
+use App\Services\PlayerService;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StorePlayerRequest;
@@ -38,8 +42,7 @@ class PlayerController extends Controller
     public function create(LocationService $locationService): View
     {
         $educations = Education::all();
-        $countries = $locationService->getCountries();
-        dd($countries->body());
+        $countries = ($locationService->getCountries())->json();
         return view('admin.players.create', compact('educations', 'countries'));
     }
 
@@ -49,10 +52,10 @@ class PlayerController extends Controller
      * @param StorePlayerRequest $request
      * @return RedirectResponse
      */
-    public function store(StorePlayerRequest $request): RedirectResponse
+    public function store(StorePlayerRequest $request, PlayerService $playerService): RedirectResponse
     {
         $validated = $request->validated();
-        (new PlayerService())->addPlayer($validated, Configuration::getValueByKey(Configuration::REGISTER_TICKETS));
+        $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::INITIAL_COINS));
         return redirect()->route('player.index')->with('success', 'Player added successfully.');
     }
 

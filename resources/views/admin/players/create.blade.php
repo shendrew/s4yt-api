@@ -1,8 +1,6 @@
 @extends('layouts.admin')
 
 @section('content')
-
-    {{ json_encode($countries) }}
     <div class="container">
         <!-- title -->
         <div class="container content-section">
@@ -65,11 +63,21 @@
                     <input type="text" class="form-control" list="countries" id="country" name="country" placeholder="Type to search..." aria-describedby="country_error">
                     <datalist id="countries">
                         @foreach($countries as $country)
-
+                            <option value="{{ $country['name'] }}" data-iso="{{ $country['iso2'] }}" ></option>
                         @endforeach
                     </datalist>
                     @if ($errors->has('country'))
                         <small id="country_error" class="form-text text-danger">{{ $errors->first('country') }}</small>
+                    @endif
+                </div>
+                <div class="form-group mt-2">
+                    <label for="state">Province/State (Required)</label>
+                    <input type="text" class="form-control" list="states" id="state" name="state" placeholder="Type to search..." aria-describedby="state_error">
+                    <datalist id="states">
+
+                    </datalist>
+                    @if ($errors->has('state'))
+                        <small id="state_error" class="form-text text-danger">{{ $errors->first('state') }}</small>
                     @endif
                 </div>
                 <div class="form-group mt-3">
@@ -90,6 +98,10 @@
         // Conditional for display
         $('#education').on('change', function() {
             this.value == 1 ? $("#institution_input").show() :  $("#institution_input").hide();
+        });
+
+        $('#country').on('input', function(){
+            console.log($(this).find(':selected').data("iso"));
         });
     });
 @endsection

@@ -13,11 +13,9 @@ class LocationService
 
     public function getCountries()
     {
-        return Cache::remember('get-countries', 60*60*24*7, function() {
-            return  Http::withoutVerifying()
-                ->withHeaders([
-                    'X-CSCAPI-KEY' => config('cities_api.api_key'),
-                ])->get(self::CITIES_API_URL . '/');
-        });
+        return Http::withoutVerifying()
+            ->withHeaders([
+                'X-CSCAPI-KEY' => config('cities_api.api_key'),
+            ])->get(self::CITIES_API_URL . '/');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Configuration;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -23,7 +24,7 @@ class AuthController extends Controller
     {
 
         $validated = $request->validated();
-        $player = $playerService->addPlayer($validated);
+        $player = $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::INITIAL_COINS));
 
         return $this->sendResponse(
             [

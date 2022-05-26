@@ -16,9 +16,10 @@ class PlayerService
      * Player registration
      *
      * @param array $data
+     * @param int $coins
      * @return User
      */
-    public function addPlayer(array $data): User
+    public function addPlayer(array $data, int $coins): User
     {
         // Insert record in table users
         $player = User::create([
@@ -31,7 +32,7 @@ class PlayerService
         $player->assignRole(Role::PLAYER);
 
         // Add default coins
-        $this->addCoinsToStudent(Configuration::getValueByKey(Configuration::INITIAL_COINS), $player->id);
+        $this->addCoinsToStudent($coins, $player->id);
 
         // Return created object
         return $player;
