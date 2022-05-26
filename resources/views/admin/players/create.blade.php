@@ -101,7 +101,14 @@
         });
 
         $('#country').on('input', function(){
-            console.log($(this).find(':selected').data("iso"));
+
+            // Get option from DOM
+            var option = $('#countries [value="' + $(this).val() + '"]');
+
+            // Check option is valid
+            if(option.length == 1){
+                console.log(option.data('iso'));
+            }
         });
     });
 @endsection
