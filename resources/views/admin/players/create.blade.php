@@ -32,10 +32,6 @@
                     @endif
                 </div>
                 <div class="form-group mt-2">
-                    <label for="preferred_email">Preferred Email</label>
-                    <input type="email" class="form-control" id="preferred_email" name="preferred_email">
-                </div>
-                <div class="form-group mt-2">
                     <label for="education">Education</label>
                     <select class="form-select form-control" aria-label="Default select example" id="education" name="education">
                         <option value="0" selected>Choose an option</option>
@@ -72,11 +68,20 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="state">Province/State (Required) <i class="fas fa-spinner fa-spin-pulse" id="state-spinner"></i></label>
-                    <select class="form-select form-control" id="state" name="state" disabled>
+                    <select class="form-select form-control" id="state" name="state" aria-describedby="state_error" disabled>
                         <option  value="0" selected>Select a province/state...</option>
                     </select>
                     @if ($errors->has('state'))
                         <small id="state_error" class="form-text text-danger">{{ $errors->first('state') }}</small>
+                    @endif
+                </div>
+                <div class="form-group mt-2">
+                    <label for="city">City (Required) <i class="fas fa-spinner fa-spin-pulse" id="city-spinner"></i></label>
+                    <select class="form-select form-control" id="city" name="city" aria-describedby="city_error" disabled>
+                        <option  value="0" selected>Select a city...</option>
+                    </select>
+                    @if ($errors->has('city'))
+                        <small id="city_error" class="form-text text-danger">{{ $errors->first('city') }}</small>
                     @endif
                 </div>
                 <div class="form-group mt-3">
@@ -94,6 +99,7 @@
         // Hide at load page
         $("#institution_input").hide();
         $("#state-spinner").hide();
+        $("#city-spinner").hide();
 
         // Conditional for display
         $('#education').on('change', function() {
@@ -107,10 +113,13 @@
             // Constants definitions
             const stateSpinner = $("#state-spinner");
             const stateSelect = $("#state");
+            const citySelect = $("#city");
             // Disabled state input
             stateSelect.prop('disabled', true);
+            citySelect.prop('disabled', true);
             // Remove potential children except first
             $("#state option").slice(1).remove();
+            $("#city option").slice(1).remove();
 
             // Check option is valid
             if(option.length == 1){
@@ -139,6 +148,51 @@
                         stateSpinner.hide();
                         // Enable select
                         stateSelect.prop('disabled', false);
+                    }
+                });
+            }
+        });
+
+        $('#state').on('change', function(){
+
+            // Get option from DOM
+            const option = $('#countries [value="' + $("#country").val() + '"]');
+            // Constants definitions
+            const citySpinner = $("#city-spinner");
+            const citySelect = $("#city");
+            // Disabled city input
+            citySelect.prop('disabled', true);
+            // Remove potential children except first
+            $("#city option").slice(1).remove();
+            const state = $(this);
+
+            if(state.val() !== "0") {
+
+                // Show loader
+                citySpinner.show();
+                // Get data
+                const ciso = option.data('iso');
+                const siso = state.val();
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type:'GET',
+                    url:"{{ route('location.cities') }}",
+                    data:{ciso:ciso, siso:siso},
+                    success:function(data){
+                        let cities = data.data.cities;
+                        $.each(cities, function(i, city) {
+                        citySelect.append('<option value="' + city.id + '">' +  city.name + '</option>');
+                        });
+                        // Hide spinner
+                        citySpinner.hide();
+                        // Enable select
+                        citySelect.prop('disabled', false);
                     }
                 });
             }
