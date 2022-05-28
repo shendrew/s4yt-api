@@ -26,7 +26,7 @@ class AuthController extends Controller
         $validated = $request->validated();
         $player = $playerService->addPlayer($validated);
 
-        Log::info('User {$player->name} registered successfully.', ['id' => $player->id]);
+        Log::info('User {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->email]);
 
         return $this->sendResponse(
             [
