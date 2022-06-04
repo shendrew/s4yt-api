@@ -49,7 +49,12 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="grade">Grade (Required)</label>
-                    <input type="text" class="form-control" id="grade" name="grade" aria-describedby="grade_error">
+                    <select class="form-select form-control" aria-label="Default select example" id="grade" name="grade">
+                        <option value="0" selected>Choose an option</option>
+                        @foreach($grades as $grade)
+                            <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                        @endforeach
+                    </select>
                     @if ($errors->has('grade'))
                         <small id="grade_error" class="form-text text-danger">{{ $errors->first('grade') }}</small>
                     @endif
@@ -82,6 +87,18 @@
                     </select>
                     @if ($errors->has('city'))
                         <small id="city_error" class="form-text text-danger">{{ $errors->first('city') }}</small>
+                    @endif
+                </div>
+                <div class="form-group mt-2">
+                    <label for="role">Role (Required)</label>
+                    <select class="form-select form-control" aria-label="Default select example" id="role" name="role">
+                        <option value="0" selected>Choose an option</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('grade'))
+                        <small id="grade_error" class="form-text text-danger">{{ $errors->first('grade') }}</small>
                     @endif
                 </div>
                 <div class="form-group mt-3">

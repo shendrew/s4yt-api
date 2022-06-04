@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Configuration;
 use App\Education;
-use App\Role;
+use App\Grade;
+use App\Role as RoleModel;
 use App\Services\LocationService;
 use App\Services\PlayerService;
 use App\User;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StorePlayerRequest;
+use Spatie\Permission\Models\Role;
 
 class PlayerController extends Controller
 {
@@ -26,7 +28,7 @@ class PlayerController extends Controller
     public function index(Request $request) : View
     {
         $players = User::whereHas('roles', function($q) {
-            $q->whereIn('name', [Role::BU_PLAYER, Role::PLAYER]);
+            $q->whereIn('name', [RoleModel::BU_PLAYER, RoleModel::PLAYER]);
         });
 
         $players = $players->paginate(20);
@@ -42,8 +44,10 @@ class PlayerController extends Controller
     public function create(LocationService $locationService): View
     {
         $educations = Education::all();
+        $grades =  Grade::all();
         $countries = ($locationService->getCountries())->json();
-        return view('admin.players.create', compact('educations', 'countries'));
+        $roles = Role::whereIn('name', [RoleModel::PLAYER, RoleModel::BU_PLAYER])->get();
+        return view('admin.players.create', compact('educations', 'countries', 'grades', 'roles'));
     }
 
     /**
@@ -55,7 +59,7 @@ class PlayerController extends Controller
     public function store(StorePlayerRequest $request, PlayerService $playerService): RedirectResponse
     {
         $validated = $request->validated();
-        $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::INITIAL_COINS));
+        $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::INITIAL_COINS), true);
         return redirect()->route('player.index')->with('success', 'Player added successfully.');
     }
 

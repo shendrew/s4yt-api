@@ -24,14 +24,15 @@ class StorePlayerRequest extends FormRequest
     public function rules()
     {
         return [
-           "name" => "required|string", 
-           "email" => "required|string|email",
+           "name" => "required|string",
+           "email" => "required|string|email|unique:users,email",
            "education" => "required|numeric",
            "institution" => "required_if:education,1|string",
-           "grade" => "required|numeric",
+           "grade" => "required|numeric|min:1",
            "country" => "required|string",
            "state" => "required|string",
            "city" => "required|string",
+           "role" => "required|string"
         ];
     }
 }
