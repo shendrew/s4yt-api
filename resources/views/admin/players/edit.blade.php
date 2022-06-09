@@ -1,13 +1,14 @@
 @extends('layouts.admin')
 
 @section('content')
+
     <div class="container">
         <!-- title -->
         <div class="container content-section">
-            <h2 class="col-lg-12 text-center">New Player</h2>
+            <h2 class="col-lg-12 text-center">Player's Data</h2>
         </div>
         <!-- resource actions -->
-        <div class="container content-section col-lg-10 offset-lg-1 mt-3">
+        <div class="container content-section col-lg-10 offset-lg-1 mt-3 d-flex justify-content-between">
             <a href="{{ route('player.index') }}" class="btn btn-primary text-white">
                 <i class="fas fa-backward mr-2"></i>
                 Go back
@@ -15,18 +16,19 @@
         </div>
         <!-- form -->
         <div class="container content-section mt-3">
-            <form action="{{ route('player.store') }}" method="POST" autocomplete="off" class="col-lg-6 offset-lg-3 mb-5">
+            <form action="{{ route('player.update',['player'=>$user -> id]) }}" method="POST" autocomplete="off" novalidate class="col-lg-6 offset-lg-3 mb-5">
                 @csrf
+                @method('PUT')
                 <div class="form-group mt-2">
                     <label for="name">Name (Required)</label>
-                    <input type="text" class="form-control" id="name" name="name" aria-describedby="name_error">
+                    <input type="text" class="form-control" id="name" name="name" aria-describedby="name_error" value={{ $user->name }}>
                     @if ($errors->has('name'))
                         <small id="name_error" class="form-text text-danger">{{ $errors->first('name') }}</small>
                     @endif
                 </div>
                 <div class="form-group mt-2">
                     <label for="email">Email (Required)</label>
-                    <input type="email" class="form-control" id="email" name="email" aria-describedby="email_error">
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="email_error" value={{ $user->email }}>
                     @if ($errors->has('email'))
                         <small id="email_error" class="form-text text-danger">{{ $errors->first('email') }}</small>
                     @endif
@@ -34,15 +36,15 @@
                 <div class="form-group mt-2">
                     <label for="education">Education</label>
                     <select class="form-select form-control" aria-label="Default select example" id="education" name="education">
-                        <option value="0" selected>Choose an option</option>
+                        <option value="0">Choose an option</option>
                         @foreach($educations as $education)
-                            <option value="{{ $education->id }}">{{ $education->name }}</option>
+                            <option value="{{ $education->id }}" {{$education->id == $user->education_id ? "selected" : "" }}>{{ $education->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group mt-2" id="institution_input">
                     <label for="institution">Institution</label>
-                    <input type="text" class="form-control" id="institution" name="institution">
+                    <input type="text" class="form-control" id="institution" name="institution" value={{ $user->school }}>
                     @if ($errors->has('institution'))
                         <small id="institution_error" class="form-text text-danger">{{ $errors->first('institution') }}</small>
                     @endif
@@ -52,7 +54,7 @@
                     <select class="form-select form-control" aria-label="Default select example" id="grade" name="grade">
                         <option value="0" selected>Choose an option</option>
                         @foreach($grades as $grade)
-                            <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                            <option value="{{ $grade->id }}" {{$grade->id == $user->grade_id ? "selected" : "" }}>{{ $grade->name }}</option>
                         @endforeach
                     </select>
                     @if ($errors->has('grade'))
@@ -61,7 +63,7 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="country">Country (Required)</label>
-                    <input type="text" class="form-control" list="countries" id="country" name="country" placeholder="Type to search..." aria-describedby="country_error">
+                    <input type="text" class="form-control" list="countries" id="country" name="country" aria-describedby="country_error" value={{ $user->country }}>
                     <datalist id="countries">
                         @foreach($countries as $country)
                             <option value="{{ $country['name'] }}" data-iso="{{ $country['iso2'] }}" ></option>
@@ -92,9 +94,9 @@
                 <div class="form-group mt-2">
                     <label for="role">Role (Required)</label>
                     <select class="form-select form-control" aria-label="Default select example" id="role" name="role">
-                        <option value="0" selected>Choose an option</option>
+                        <option value="0">Choose an option</option>
                         @foreach($roles as $role)
-                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                            <option value="{{ $role->name }}" {{$role->name == $user->getRoleNames()->first() ? "selected" : "" }}>{{ $role->name }}</option>
                         @endforeach
                     </select>
                     @if ($errors->has('role'))
@@ -107,7 +109,6 @@
             </form>
         </div>
     </div>
-
 @endsection
 
 @section('footer_scripts')
@@ -216,3 +217,4 @@
         });
     });
 @endsection
+

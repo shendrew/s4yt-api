@@ -53,11 +53,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function education_id() : HasOne {
+    public function education() : HasOne {
         return $this->HasOne(Education::class);
     }
 
-    public function grade_id() : HasOne {
+    public function grade() : HasOne {
         return $this->HasOne(Grade::class);
     }
 
