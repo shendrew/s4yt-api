@@ -14,9 +14,9 @@ class AddLocationFieldsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string("country");
-            $table->string("state", 3);
-            $table->string("city_id");
+            $table->string("country",50)->default("NA");
+            $table->string("state", 3)->default("NA");
+            $table->string("city_id")->default("NA");
         });
     }
 
