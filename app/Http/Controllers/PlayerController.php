@@ -16,6 +16,7 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StorePlayerRequest;
 use Spatie\Permission\Models\Role;
+use App\Coin;
 
 class PlayerController extends Controller
 {
@@ -66,7 +67,7 @@ class PlayerController extends Controller
     public function show($id): View
     {
         $user = User::find($id);
-        return view('admin.players.show-edit');
+        return view('admin.players.show');
     }
 
     /**
@@ -96,6 +97,22 @@ class PlayerController extends Controller
         return redirect()->route('player.index')->with('success', 'Player updated successfully.');
     }
 
+        /**
+    * Show the form for edit a resource.
+    *
+    * @param $id
+    * @return View
+    */
+    public function edit($id, LocationService $locationService): View
+    {
+        $user = User::find($id);
+        $grades = Grade::all();
+        $educations = Education::all();
+        $countries = ($locationService->getCountries())->json();
+        $roles = Role::whereIn('name', [RoleModel::PLAYER, RoleModel::BU_PLAYER])->get();
+        return view('admin.players.edit', compact('user', 'grades', 'educations', 'countries', 'roles'));
+    }
+
     public function destroy($id): RedirectResponse
     {
         $player = User::find($id);
@@ -104,6 +121,7 @@ class PlayerController extends Controller
             return redirect()->route('player.index')->with('error', 'Player not found.');
         }
 
+        Coin::where('user_id', $player->id)->delete();
         User::destroy($player->id);
         return redirect()->route('player.index')->with('success', 'Player deleted successfully.');
     }
