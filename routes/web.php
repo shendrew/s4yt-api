@@ -23,3 +23,6 @@ Route::middleware('auth')->prefix('/admin')->group(function () {
     Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
 });
 
+Route::middleware('auth')->group(function() {
+    Route::get('referral', [App\Http\Controllers\Api\ProfileController::class, 'getReferral']);
+});

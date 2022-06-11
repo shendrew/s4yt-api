@@ -23,13 +23,14 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules()
     {
-        $rule = [
+        return [
             'name' => 'required|string|min:3',
             'education_id' => 'required|integer|max:3',
-            'grade_id' => 'nullable|required|integer|max:4',
-            'school' => "nullable|required|string",
+            'grade_id' => 'required_unless:education_id,3|integer|max:4',
+            'school' => 'required_if:education_id,1|string',
+            'country' => 'required|string|max:50',
+            'state' => 'required|string|max:3',
+            'city_id' => 'required|integer'
         ];
-
-        return $rule;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\UpdateProfileRequest;
 use App\Http\Requests\UpdatePasswordRequest;
@@ -13,18 +14,21 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
 
-        $user = User::find(Auth::user()->id);
+        $user = User::find(auth()->user()-id);
 
         $user->name = $validated['name'];
         $user->education_id = $validated['education_id'];
         $user->grade_id = $validated['grade_id'];
         $user->school = $validated['school'];
+        $user->country = $validated['country'];
+        $user->state = $validated['state'];
+        $user->city_id = $validated['city_id'];
         $user->save();
 
         return $this->sendResponse(
             [
-                'name' => Auth::user()->name,
-                'email' => Auth::user()->email
+                'name' => auth()->name,
+                'email' => auth()->email
             ],
             "User information updated successfully",
             200
@@ -35,18 +39,28 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
 
-        $user = User::find(Auth::user()->id);
+        $user = User::find(auth()->user()-id);
 
-        $user->password = $validated['new_password'];
+        $user->password = Hash::make($validated['new_password']);
         $user->save();
 
         return $this->sendResponse(
             [
-                'name' => Auth::user()->name,
-                'email' => Auth::user()->email
+                'name' => auth()->name,
+                'email' => auth()->email
             ],
             "User password updated successfully",
             200
         );
+    }
+
+    public function getReferral()
+    {
+        $user = auth()->user();
+
+        $referred_by = $user->referred_by;
+        $referral_code = $user->referral_code;
+
+        return view('profile.referral', ['referred_by' => $referred_by, 'referral_code' => $referral_code]);
     }
 }
