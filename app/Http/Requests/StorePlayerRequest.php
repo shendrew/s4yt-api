@@ -26,13 +26,13 @@ class StorePlayerRequest extends FormRequest
         return [
            "name" => "required|string",
            "email" => "required|string|email|unique:users,email",
-           "education" => "required|numeric",
+           "education" => "required|numeric|exists:educations,id",
            "institution" => "required_if:education,1|string",
-           "grade" => "required|numeric|min:1",
+           "grade" => "required|numeric|exists:grades,id",
            "country" => "required|string",
            "state" => "required|string",
            "city" => "required|string",
-           "role" => "required|string"
+           "role" => "required|string|exists:roles,id"
         ];
     }
 }

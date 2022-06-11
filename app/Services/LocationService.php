@@ -18,4 +18,15 @@ class LocationService
                 'X-CSCAPI-KEY' => config('cities_api.api_key'),
             ])->get(self::CITIES_API_URL . '/');
     }
+
+    public function getCiso(string $userCountry, array $countries)
+    {
+        $ciso = null;
+        foreach($countries as $country) {
+            if($country['name'] == $userCountry) {
+                $ciso = $country['iso2'];
+            }
+        }
+        return $ciso;
+    }
 }

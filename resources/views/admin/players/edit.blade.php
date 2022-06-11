@@ -5,7 +5,7 @@
     <div class="container">
         <!-- title -->
         <div class="container content-section">
-            <h2 class="col-lg-12 text-center">Player's Data</h2>
+            <h2 class="col-lg-12 text-center">Edit {{ $user->name }}'s info</h2>
         </div>
         <!-- resource actions -->
         <div class="container content-section col-lg-10 offset-lg-1 mt-3 d-flex justify-content-between">
@@ -21,14 +21,14 @@
                 @method('PUT')
                 <div class="form-group mt-2">
                     <label for="name">Name (Required)</label>
-                    <input type="text" class="form-control" id="name" name="name" aria-describedby="name_error" value={{ $user->name }}>
+                    <input type="text" class="form-control" id="name" name="name" aria-describedby="name_error" value="{{ $user->name }}">
                     @if ($errors->has('name'))
                         <small id="name_error" class="form-text text-danger">{{ $errors->first('name') }}</small>
                     @endif
                 </div>
                 <div class="form-group mt-2">
                     <label for="email">Email (Required)</label>
-                    <input type="email" class="form-control" id="email" name="email" aria-describedby="email_error" value={{ $user->email }}>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="email_error" value="{{ $user->email }}">
                     @if ($errors->has('email'))
                         <small id="email_error" class="form-text text-danger">{{ $errors->first('email') }}</small>
                     @endif
@@ -38,13 +38,13 @@
                     <select class="form-select form-control" aria-label="Default select example" id="education" name="education">
                         <option value="0">Choose an option</option>
                         @foreach($educations as $education)
-                            <option value="{{ $education->id }}" {{$education->id == $user->education_id ? "selected" : "" }}>{{ $education->name }}</option>
+                            <option value="{{ $education->id }}" {{ $education->id == $user->education_id ? "selected" : "" }}>{{ $education->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group mt-2" id="institution_input">
                     <label for="institution">Institution</label>
-                    <input type="text" class="form-control" id="institution" name="institution" value={{ $user->school }}>
+                    <input type="text" class="form-control" id="institution" name="institution" value="{{ $user->school }}">
                     @if ($errors->has('institution'))
                         <small id="institution_error" class="form-text text-danger">{{ $errors->first('institution') }}</small>
                     @endif
@@ -63,7 +63,7 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="country">Country (Required)</label>
-                    <input type="text" class="form-control" list="countries" id="country" name="country" aria-describedby="country_error" value={{ $user->country }}>
+                    <input type="text" class="form-control" list="countries" id="country" name="country" aria-describedby="country_error" value={{ $user->country }} data-iso="{{ $ciso }}">
                     <datalist id="countries">
                         @foreach($countries as $country)
                             <option value="{{ $country['name'] }}" data-iso="{{ $country['iso2'] }}" ></option>
@@ -75,8 +75,8 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="state">Province/State (Required) <i class="fas fa-spinner fa-spin-pulse" id="state-spinner"></i></label>
-                    <select class="form-select form-control" id="state" name="state" aria-describedby="state_error" disabled>
-                        <option  value="0" selected>Select a province/state...</option>
+                    <select class="form-select form-control" id="state" name="state" aria-describedby="state_error" data-iso={{ $user->state }} disabled>
+                        <option value="0">Select a province/state...</option>
                     </select>
                     @if ($errors->has('state'))
                         <small id="state_error" class="form-text text-danger">{{ $errors->first('state') }}</small>
@@ -84,8 +84,8 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="city">City (Required) <i class="fas fa-spinner fa-spin-pulse" id="city-spinner"></i></label>
-                    <select class="form-select form-control" id="city" name="city" aria-describedby="city_error" disabled>
-                        <option  value="0" selected>Select a city...</option>
+                    <select class="form-select form-control" id="city" name="city" aria-describedby="city_error" disabled data-id={{ $user->city_id }}>
+                        <option value="0" selected>Select a city...</option>
                     </select>
                     @if ($errors->has('city'))
                         <small id="city_error" class="form-text text-danger">{{ $errors->first('city') }}</small>
@@ -115,13 +115,83 @@
     $(document).ready(function(){
 
         // Hide at load page
-        $("#institution_input").hide();
+        $('#education').value == 1 ? $("#institution_input").show() :  $("#institution_input").hide();
         $("#state-spinner").hide();
         $("#city-spinner").hide();
 
         // Conditional for display
         $('#education').on('change', function() {
             this.value == 1 ? $("#institution_input").show() :  $("#institution_input").hide();
+        });
+
+        $('#country').ready(function(){
+
+            // Constants definitions
+            const stateSpinner = $("#state-spinner");
+            const stateSelect = $("#state");
+            const citySpinner = $("#city-spinner");
+            const citySelect = $("#city");
+
+            // Show loader
+            stateSpinner.show();
+            // Get data
+            const ciso = $('#country').data('iso');
+            const siso = $('#state').data('iso');
+            const city_id =  $('#city').data('id');
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type:'GET',
+                url:"{{ route('location.states') }}",
+                data:{ciso:ciso},
+                success:function(data){
+                    let states = data.data.states;
+                    $.each(states, function(i, state) {
+                        if(state.iso2 == siso) {
+                            stateSelect.append(
+                            '<option value="' + state.iso2 + '" selected>' +  state.name + '</option>');
+                        } else {
+                            stateSelect.append(
+                                '<option value="' + state.iso2 + '">' +  state.name + '</option>');
+                        }
+                    });
+                    // Hide spinner
+                    stateSpinner.hide();
+                    // Enable select
+                    stateSelect.prop('disabled', false);
+                }
+            });
+
+            // Show loader
+            citySpinner.show();
+
+            $.ajax({
+                type:'GET',
+                url:"{{ route('location.cities') }}",
+                data:{ciso:ciso, siso:siso},
+                success:function(data){
+                    let cities = data.data.cities;
+                    $.each(cities, function(i, city) {
+                        console.log(city.id, city_id);
+                        if(city.id == city_id) {
+                            citySelect.append('<option value="' + city.id + '" selected>' +  city.name + '</option>');
+                        } else {
+                            citySelect.append('<option value="' + city.id + '">' +  city.name + '</option>');
+                        }
+
+                    });
+                    // Hide spinner
+                    citySpinner.hide();
+                    // Enable select
+                    citySelect.prop('disabled', false);
+                }
+            });
+
         });
 
         $('#country').on('input', function(){
@@ -170,6 +240,9 @@
                 });
             }
         });
+
+
+
 
         $('#state').on('change', function(){
 

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StorePlayerRequest;
+use App\Http\Requests\UpdatePlayerRequest;
 use Spatie\Permission\Models\Role;
 use App\Coin;
 
@@ -109,8 +110,9 @@ class PlayerController extends Controller
         $grades = Grade::all();
         $educations = Education::all();
         $countries = ($locationService->getCountries())->json();
+        $ciso = $locationService->getCiso($user->country, $countries);
         $roles = Role::whereIn('name', [RoleModel::PLAYER, RoleModel::BU_PLAYER])->get();
-        return view('admin.players.edit', compact('user', 'grades', 'educations', 'countries', 'roles'));
+        return view('admin.players.edit', compact('user', 'grades', 'educations', 'countries', 'roles', 'ciso'));
     }
 
     public function destroy($id): RedirectResponse

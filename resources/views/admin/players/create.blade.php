@@ -39,6 +39,9 @@
                             <option value="{{ $education->id }}">{{ $education->name }}</option>
                         @endforeach
                     </select>
+                    @if ($errors->has('education'))
+                        <small id="education_error" class="form-text text-danger">{{ $errors->first('education') }}</small>
+                    @endif
                 </div>
                 <div class="form-group mt-2" id="institution_input">
                     <label for="institution">Institution</label>
