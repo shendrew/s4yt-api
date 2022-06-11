@@ -21,10 +21,8 @@ class AuthController extends Controller
      * @param PlayerService $playerService
      * @return JsonResponse
      */
-    public function register(Request $request, PlayerService $playerService): JsonResponse
+    public function register(RegisterRequest $request, PlayerService $playerService): JsonResponse
     {
-        dd($request->all());
-
         $validated = $request->validated();
         $player = $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::INITIAL_COINS));
 
