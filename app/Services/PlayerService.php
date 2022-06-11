@@ -16,22 +16,35 @@ class PlayerService
      * Player registration
      *
      * @param array $data
+     * @param int $coins
      * @return User
      */
-    public function addPlayer(array $data): User
+    public function addPlayer(array $data, int $coins, bool $admin = false): User
     {
         // Insert record in table users
         $player = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+            'password' => $admin ? Hash::make(config('app.default_pass')) : Hash::make($data['password']),
+            'country' => $data['country'],
+            'state' => $data['state'],
+            'city_id' => $data['city']
         ]);
 
+        $player->education_id = $data['education'];
+        $player->school =  $data['institution'] ?? null;
+        $player->grade_id = $data['grade'];
+        $player->save();
+
         // Assign role
-        $player->assignRole(Role::PLAYER);
+        if($admin) {
+            $player->assignRole($data["role"]);
+        } else {
+            $player->assignRole(Role::PLAYER);
+        }
 
         // Add default coins
-        $this->addCoinsToStudent(Configuration::getValueByKey(Configuration::INITIAL_COINS), $player->id);
+        $this->addCoinsToStudent($coins, $player->id);
 
         // Return created object
         return $player;

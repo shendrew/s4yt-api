@@ -33,7 +33,7 @@
                             <td>
                                 <div class="container d-flex justify-content-center">
                                     @role('super_admin|admin')
-                                        <a type="submit" class="btn btn-primary text-white" href="{{ route('player.show', $player->id) }}">
+                                        <a type="submit" class="btn btn-primary text-white" href="{{ route('player.edit', $player->id) }}">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
                                         <form action="{{ route('player.destroy', $player->id) }}" method="POST">

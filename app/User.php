@@ -24,7 +24,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'school', 'education_id', 'grade_id'
+        'name',
+        'email',
+        'password',
+        'school',
+        'education_id',
+        'grade_id',
+        'country',
+        'state',
+        'city_id'
     ];
 
     /**
@@ -45,11 +53,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function education_id() : HasOne {
+    public function education() : HasOne {
         return $this->HasOne(Education::class);
     }
 
-    public function grade_id() : HasOne {
+    public function grade() : HasOne {
         return $this->HasOne(Grade::class);
     }
 

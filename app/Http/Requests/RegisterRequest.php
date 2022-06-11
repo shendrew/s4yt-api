@@ -27,6 +27,12 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|min:3',
             'email'=> 'required|string|email|unique:users,email',
             'password' => 'required|string|confirmed|min:8',
+            'education' => 'required|numeric|exists:educations,id',
+            'institution' => 'required_if:education,1|string',
+            'grade' => 'required|numeric|exists:grades,id',
+            'country' => 'required|string',
+            'state' => 'required|string',
+            'city' => 'required|string'
         ];
     }
 }

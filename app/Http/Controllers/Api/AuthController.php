@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Configuration;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -10,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use App\User;
 use App\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -21,9 +23,8 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request, PlayerService $playerService): JsonResponse
     {
-
         $validated = $request->validated();
-        $player = $playerService->addPlayer($validated);
+        $player = $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::INITIAL_COINS));
 
         return $this->sendResponse(
             [
