@@ -19,6 +19,22 @@ class LocationService
             ])->get(self::CITIES_API_URL . '/');
     }
 
+    public function getStates(string $ciso)
+    {
+        return Http::withoutVerifying()
+        ->withHeaders([
+            'X-CSCAPI-KEY' => config('cities_api.api_key'),
+        ])->get(self::CITIES_API_URL . '/' . $ciso . '/states');
+    }
+
+    public function getCities(string $ciso, string $siso)
+    {
+        return Http::withoutVerifying()
+            ->withHeaders([
+                'X-CSCAPI-KEY' => config('cities_api.api_key'),
+            ])->get(self::CITIES_API_URL . '/' . $ciso . '/states' . '/' . $siso . '/cities');
+    }
+
     public function getCiso(string $userCountry, array $countries)
     {
         $ciso = null;

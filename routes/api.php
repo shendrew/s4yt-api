@@ -18,10 +18,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Location services
+Route::get('/location/countries', [\App\Http\Controllers\Api\LocationController::class, 'getCountries']);
+Route::get('/location/states', [\App\Http\Controllers\Api\LocationController::class, 'getStates'])->name('location.states');
+Route::get('/location/cities', [\App\Http\Controllers\Api\LocationController::class, 'getCities'])->name('location.cities');
+
 Route::middleware('auth:api')->group(function () {
 
-    Route::get('/location/countries', [\App\Http\Controllers\Api\LocationController::class, 'getCountries']);
-    Route::get('/location/states', [\App\Http\Controllers\Api\LocationController::class, 'getStates'])->name('location.states');
-    Route::get('/location/cities', [\App\Http\Controllers\Api\LocationController::class, 'getCities'])->name('location.cities');
+
     Route::post('/logout', [AuthController::class, 'logout']);;
 });

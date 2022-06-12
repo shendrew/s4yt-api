@@ -13,55 +13,52 @@ use Illuminate\Support\Facades\Http;
 
 class LocationController extends Controller
 {
-
-    const CITIES_API_URL = 'https://api.countrystatecity.in/v1/countries';
-
     public function getCountries(LocationService $locationService): JsonResponse
     {
-        $countries = $locationService->getCountries();
+        $countries = Cache::remember('countries', 60*60*24*7, function() use ($locationService) {
+            return $locationService->getCountries();
+        });
 
         return $this->sendResponse(
             [
-               'countries' => $countries->json()
+               'countries' => $countries
             ],
             "List of countries"
         );
     }
 
-    public function getStates(StatesRequest $request): JsonResponse
+    public function getStates(StatesRequest $request, LocationService $locationService): JsonResponse
     {
         $validated = $request->validated();
 
-        $states = Http::withoutVerifying()
-            ->withHeaders([
-                'X-CSCAPI-KEY' => config('cities_api.api_key'),
-            ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states');
+        $states = Cache::remember('states_' . $validated['ciso'], 60*60*24*7, function() use ($locationService, $validated) {
+            return ($locationService->getStates($validated['ciso']))->json();
+        });
 
         return $this->sendResponse(
             [
                 'country' =>  $validated['ciso'],
-                'states' => $states->json()
+                'states' => $states
             ],
-            "List of states of country"
+            "List of states by country"
         );
     }
 
-    public function getCities(CitiesRequest $request): JsonResponse
+    public function getCities(CitiesRequest $request, LocationService $locationService): JsonResponse
     {
         $validated = $request->validated();
 
-        $cities = Http::withoutVerifying()
-            ->withHeaders([
-                'X-CSCAPI-KEY' => config('cities_api.api_key'),
-            ])->get(self::CITIES_API_URL . '/' . $validated['ciso'] . '/states' . '/' . $validated['siso'] . '/cities');
+        $cities = Cache::remember('cities_' . $validated['ciso'] . '_' . $validated['siso'], 60*60*24*7, function() use ($locationService, $validated) {
+            return ($locationService->getCities($validated['ciso'], $validated['siso']))->json();
+        });
 
         return $this->sendResponse(
             [
                 'country' =>  $validated['ciso'],
                 'state' => $validated['siso'],
-                'cities' => $cities->json()
+                'cities' => $cities
             ],
-            "List of cities of state of country"
+            "List of cities by state and country"
         );
     }
 }
