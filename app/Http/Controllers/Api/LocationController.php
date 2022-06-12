@@ -16,7 +16,7 @@ class LocationController extends Controller
     public function getCountries(LocationService $locationService): JsonResponse
     {
         $countries = Cache::remember('countries', 60*60*24*7, function() use ($locationService) {
-            return $locationService->getCountries();
+            return ($locationService->getCountries())->json();
         });
 
         return $this->sendResponse(
