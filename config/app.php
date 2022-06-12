@@ -14,6 +14,8 @@ return [
         'password' => env('ADMIN_PASS', 'qwerty123'),
     ],
 
+    'default_pass' => env('DEFAULT_PASS', 'bC59CFkpi^FMOc'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
