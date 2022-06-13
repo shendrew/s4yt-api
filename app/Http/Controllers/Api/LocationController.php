@@ -15,8 +15,8 @@ class LocationController extends Controller
 {
     public function getCountries(LocationService $locationService): JsonResponse
     {
-        $countries = Cache::remember('countries', 60*60*24*7, function() use ($locationService) {
-            return ($locationService->getCountries())->json();
+        $countries = Cache::remember('countries', 60*60*24*7, function() {
+            return ( LocationService::getCountries())->json();
         });
 
         return $this->sendResponse(
@@ -32,7 +32,7 @@ class LocationController extends Controller
         $validated = $request->validated();
 
         $states = Cache::remember('states_' . $validated['ciso'], 60*60*24*7, function() use ($locationService, $validated) {
-            return ($locationService->getStates($validated['ciso']))->json();
+            return (LocationService::getStates($validated['ciso']))->json();
         });
 
         return $this->sendResponse(
@@ -49,7 +49,7 @@ class LocationController extends Controller
         $validated = $request->validated();
 
         $cities = Cache::remember('cities_' . $validated['ciso'] . '_' . $validated['siso'], 60*60*24*7, function() use ($locationService, $validated) {
-            return ($locationService->getCities($validated['ciso'], $validated['siso']))->json();
+            return (LocationService::getCities($validated['ciso'], $validated['siso']))->json();
         });
 
         return $this->sendResponse(

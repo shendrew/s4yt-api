@@ -110,7 +110,7 @@ class PlayerController extends Controller
         $grades = Grade::all();
         $educations = Education::all();
         $countries = ($locationService->getCountries())->json();
-        $ciso = $locationService->getCiso($user->country, $countries);
+        $ciso = LocationService::getCiso($user->country, $countries);
         $roles = Role::whereIn('name', [RoleModel::PLAYER, RoleModel::BU_PLAYER])->get();
         return view('admin.players.edit', compact('user', 'grades', 'educations', 'countries', 'roles', 'ciso'));
     }

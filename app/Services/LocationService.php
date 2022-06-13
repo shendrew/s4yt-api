@@ -9,33 +9,32 @@ use Illuminate\Support\Facades\Http;
 
 class LocationService
 {
-    const CITIES_API_URL = 'https://api.countrystatecity.in/v1/countries';
+    private static $client;
 
-    public function getCountries()
+    public function __construct()
     {
-        return Http::withoutVerifying()
-            ->withHeaders([
-                'X-CSCAPI-KEY' => config('cities_api.api_key'),
-            ])->get(self::CITIES_API_URL . '/');
-    }
-
-    public function getStates(string $ciso)
-    {
-        return Http::withoutVerifying()
+        static::$client = Http::withoutVerifying()
         ->withHeaders([
             'X-CSCAPI-KEY' => config('cities_api.api_key'),
-        ])->get(self::CITIES_API_URL . '/' . $ciso . '/states');
+        ]);
     }
 
-    public function getCities(string $ciso, string $siso)
+    public static function getCountries()
     {
-        return Http::withoutVerifying()
-            ->withHeaders([
-                'X-CSCAPI-KEY' => config('cities_api.api_key'),
-            ])->get(self::CITIES_API_URL . '/' . $ciso . '/states' . '/' . $siso . '/cities');
+        return static::$client->get(config('cities_api.base_url') . '/');
     }
 
-    public function getCiso(string $userCountry, array $countries)
+    public static function getStates(string $ciso)
+    {
+        return static::$client->get(config('cities_api.base_url') . '/' . $ciso . '/states');
+    }
+
+    public static function getCities(string $ciso, string $siso)
+    {
+        return static::$client->get(config('cities_api.base_url') . '/' . $ciso . '/states' . '/' . $siso . '/cities');
+    }
+
+    public static function getCiso(string $userCountry, array $countries)
     {
         $ciso = null;
         foreach($countries as $country) {
