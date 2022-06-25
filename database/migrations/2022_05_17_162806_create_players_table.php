@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFieldsUsersTable extends Migration
+class CreatePlayersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,17 @@ class AddFieldsUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table)
-        {
+        Schema::create('players', function (Blueprint $table) {
+            $table->id();
             $table->string('school')->nullable();
             $table->foreignId('education_id')->nullable()->constrained('educations');
             $table->foreignId('grade_id')->nullable()->constrained('grades');
+
+            $table->string("country",50)->nullable();
+            $table->string("state", 3)->nullable();
+            $table->string("city_id")->nullable();
+
+            $table->timestamps();
         });
     }
 
@@ -28,12 +34,6 @@ class AddFieldsUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('school');
-            $table->dropForeign('users_education_id_foreign');
-            $table->dropColumn('education_id');
-            $table->dropForeign('users_grade_id_foreign');
-            $table->dropColumn('grade_id');
-        });
+        Schema::dropIfExists('players');
     }
 }

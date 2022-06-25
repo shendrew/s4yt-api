@@ -14,15 +14,15 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
 
-        $user = User::find(auth()->user()-id);
+        $user = User::find(auth()->user()->id);
 
         $user->name = $validated['name'];
-        $user->education_id = $validated['education_id'];
-        $user->grade_id = $validated['grade_id'];
-        $user->school = $validated['school'];
-        $user->country = $validated['country'];
-        $user->state = $validated['state'];
-        $user->city_id = $validated['city_id'];
+        $user->player->education_id = $validated['education_id'];
+        $user->player->grade_id = $validated['grade_id'];
+        $user->player->school = $validated['school'];
+        $user->player->country = $validated['country'];
+        $user->player->state = $validated['state'];
+        $user->player->city_id = $validated['city_id'];
         $user->save();
 
         return $this->sendResponse(

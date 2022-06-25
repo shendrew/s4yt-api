@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddLocationFieldsToUsersTable extends Migration
+class CreateBusinessSponsorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AddLocationFieldsToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string("country",50)->nullable();
-            $table->string("state", 3)->nullable();
-            $table->string("city_id")->nullable();
+        Schema::create('business_sponsors', function (Blueprint $table) {
+            $table->id();
+            $table->text('question')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -27,8 +27,6 @@ class AddLocationFieldsToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('business_sponsors');
     }
 }

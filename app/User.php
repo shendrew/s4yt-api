@@ -13,6 +13,8 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Traits\Referable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -27,12 +29,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'school',
-        'education_id',
-        'grade_id',
-        'country',
-        'state',
-        'city_id'
     ];
 
     /**
@@ -53,19 +49,40 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function education() : HasOne {
-        return $this->HasOne(Education::class);
-    }
-
-    public function grade() : HasOne {
-        return $this->HasOne(Grade::class);
-    }
-
     /**
      * @return BelongsTo
      */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function version_users() : BelongsToMany {
+        return $this->belongsToMany(Version_User::class);
+    }
+}
+
+class Player extends Model
+{
+    public function user()
+    {
+        return $this->morphOne('App\User', 'userable');
+    }
+
+    protected $fillable = [
+        'school',
+        'education_id',
+        'grade_id',
+        'country',
+        'state',
+        'city_id'
+    ];
+
+    public function education() : HasOne {
+        return $this->HasOne(Education::class);
+    }
+
+    public function grade() : HasOne {
+        return $this->HasOne(Grade::class);
     }
 }

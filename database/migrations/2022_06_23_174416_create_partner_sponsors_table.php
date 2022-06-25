@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCoinsToUsersTable extends Migration
+class CreatePartnerSponsorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddCoinsToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer("coins")->nullable();
+        Schema::create('partner_sponsors', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +26,6 @@ class AddCoinsToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn("coins");
-        });
+        Schema::dropIfExists('partner_sponsors');
     }
 }
