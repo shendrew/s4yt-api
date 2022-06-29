@@ -7,6 +7,7 @@ use App\Coin;
 use App\Configuration;
 use App\Role;
 use App\User;
+use App\Player;
 use Illuminate\Support\Facades\Hash;
 
 class PlayerService
@@ -22,29 +23,32 @@ class PlayerService
     public function addPlayer(array $data, int $coins, bool $admin = false): User
     {
         // Insert record in table users
-        $player = User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $admin ? Hash::make(config('app.default_pass')) : Hash::make($data['password']),
+            'password' => $admin ? Hash::make(config('app.default_pass')) : Hash::make($data['password']),            
+        ]);
+
+        $player = Player::create([
+            'education' => $data['education'],
+            'grade_id' => $data['grade'],
             'country' => $data['country'],
             'state' => $data['state'],
             'city_id' => $data['city']
         ]);
 
-        $player->education_id = $data['education'];
         $player->school =  $data['institution'] ?? null;
-        $player->grade_id = $data['grade'];
         $player->save();
 
         // Assign role
         if($admin) {
-            $player->assignRole($data["role"]);
+            $user->assignRole($data["role"]);
         } else {
-            $player->assignRole(Role::PLAYER);
+            $user->assignRole(Role::PLAYER);
         }
 
         // Add default coins
-        $this->addCoinsToStudent($coins, $player->id);
+        $this->addCoinsToStudent($coins, $user->id);
 
         // Return created object
         return $player;
@@ -56,8 +60,8 @@ class PlayerService
      * @param int $coins
      * @param string $player_id
      */
-    private function addCoinsToStudent(int $coins, string $player_id)
+    private function addCoinsToStudent(int $coins, string $user)
     {
-        factory(Coin::class, $coins)->create(['user_id' => $player_id]);
+        factory(Coin::class, $coins)->create(['user_id' => $user_id]);
     }
 }

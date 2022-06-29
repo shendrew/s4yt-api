@@ -61,28 +61,3 @@ class User extends Authenticatable
         return $this->belongsToMany(Version_User::class);
     }
 }
-
-class Player extends Model
-{
-    public function user()
-    {
-        return $this->morphOne('App\User', 'userable');
-    }
-
-    protected $fillable = [
-        'school',
-        'education_id',
-        'grade_id',
-        'country',
-        'state',
-        'city_id'
-    ];
-
-    public function education() : HasOne {
-        return $this->HasOne(Education::class);
-    }
-
-    public function grade() : HasOne {
-        return $this->HasOne(Grade::class);
-    }
-}
