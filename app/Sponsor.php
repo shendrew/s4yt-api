@@ -6,36 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sponsor extends Model
 {
-    public function sponsorable()
-    {
-        return $this->morphTo();
-    }
+    
 
     protected $fillable = [
         'name'
     ];
-}
 
-class Business_Sponsor extends Model
-{
-    public function sponsor()
+    public function user()
     {
-        return $this->morphOne('App\Sponsor', 'sponsorable');
+        return $this->morphOne('App\User', 'userable');
     }
-}
 
-class Raffle_Sponsor extends Model
-{
-    public function sponsor()
+    public function sponsorable()
     {
-        return $this->morphOne('App\Sponsor', 'sponsorable');
-    }
-}
-
-class Partner_Sponsor extends Model
-{
-    public function sponsor()
-    {
-        return $this->morphOne('App\Sponsor', 'sponsorable');
+        return $this->morphTo();
     }
 }

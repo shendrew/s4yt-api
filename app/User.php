@@ -60,4 +60,9 @@ class User extends Authenticatable
     public function version_users() : BelongsToMany {
         return $this->belongsToMany(Version_User::class);
     }
+
+    public function userable()
+    {
+        return $this->morphTo();
+    }
 }

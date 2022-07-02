@@ -33,7 +33,7 @@ class PlayerController extends Controller
             $q->whereIn('name', [RoleModel::BU_PLAYER, RoleModel::PLAYER]);
         });
 
-        $users = $players->paginate(20);
+        $players = $users->paginate(20);
         return view('admin.players.index',compact('players'));
     }
 
