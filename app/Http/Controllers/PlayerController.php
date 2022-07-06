@@ -29,11 +29,11 @@ class PlayerController extends Controller
      */
     public function index(Request $request) : View
     {
-        $players = User::whereHas('roles', function($q) {
+        $users = User::whereHas('roles', function($q) {
             $q->whereIn('name', [RoleModel::BU_PLAYER, RoleModel::PLAYER]);
         });
 
-        $players = $players->paginate(20);
+        $players = $users->paginate(20);
         return view('admin.players.index',compact('players'));
     }
 

@@ -27,12 +27,12 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|min:3',
             'email'=> 'required|string|email|unique:users,email',
             'password' => 'required|string|confirmed|min:8',
-            'education' => 'required|numeric|exists:educations,id',
+            'education_id' => 'required|numeric|exists:educations,id',
             'institution' => 'required_if:education,1|string',
-            'grade' => 'required|numeric|exists:grades,id',
-            'country' => 'required|string',
-            'state' => 'required|string',
-            'city' => 'required|string'
+            'grade_id' => 'required|numeric|exists:grades,id',
+            'country_iso' => 'required|string|min:2|max:3',
+            'state_iso' => 'required|string|min:2|max:3',
+            'city_id' => 'required|integer'
         ];
     }
 }

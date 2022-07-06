@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCoinsToUsersTable extends Migration
+class CreateCoinTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddCoinsToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer("coins")->nullable();
+        Schema::create('coin_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('event', 50);
+            $table->text('description')->nullable();
+            $table->boolean('admin_panel')->default(0);
         });
     }
 
@@ -25,8 +28,6 @@ class AddCoinsToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn("coins");
-        });
+        Schema::dropIfExists('coin_types');
     }
 }

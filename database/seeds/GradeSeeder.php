@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class GradeSeeder extends Seeder
 {
@@ -11,9 +12,13 @@ class GradeSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('grades')->insert(['name' => '9']);
-        DB::table('grades')->insert(['name' => '10']);
-        DB::table('grades')->insert(['name' => '11']);
-        DB::table('grades')->insert(['name' => '12']);
+        $grades = [
+            ['name' => '9th grade'],
+            ['name' => '10th grade'],
+            ['name' => '11th grade'],
+            ['name' => '12ve grade']
+        ];
+
+        DB::table('grades')->insert($grades);
     }
 }

@@ -12,8 +12,12 @@ class EducationSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('educations')->insert(['name' => 'High school']);
-        DB::table('educations')->insert(['name' => 'Home school']);
-        DB::table('educations')->insert(['name' => 'Currently not in school']);
+        $educations = [
+            ['name' => 'High school'],
+            ['name' => 'Home school'],
+            ['name' => 'Currently not in school']
+        ];
+
+        DB::table('educations')->insert($educations);
     }
 }

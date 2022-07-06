@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Configuration;
+use App\Models\Configuration;
 
 trait HasCoins
 {
@@ -10,7 +10,7 @@ trait HasCoins
     protected static function bootHasCoins()
     {
         static::creating(function ($model) {
-           $model->coins = (int)Configuration::getValueByKey(Configuration::INITIAL_COINS);
+           $model->coins = (int)Configuration::getValueByKey(Configuration::REGISTER_COINS);;
         });
     }
 

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\User;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\UpdateProfileRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Http\JsonResponse;
 
@@ -14,21 +14,21 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
 
-        $user = User::find(auth()->user()-id);
+        $user = User::find(auth()->user()->id);
 
         $user->name = $validated['name'];
-        $user->education_id = $validated['education_id'];
-        $user->grade_id = $validated['grade_id'];
-        $user->school = $validated['school'];
-        $user->country = $validated['country'];
-        $user->state = $validated['state'];
-        $user->city_id = $validated['city_id'];
+        $user->player->education_id = $validated['education_id'];
+        $user->player->grade_id = $validated['grade_id'];
+        $user->player->school = $validated['school'];
+        $user->player->country = $validated['country'];
+        $user->player->state = $validated['state'];
+        $user->player->city_id = $validated['city_id'];
         $user->save();
 
         return $this->sendResponse(
             [
-                'name' => auth()->name,
-                'email' => auth()->email
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email
             ],
             "User information updated successfully",
             200
@@ -46,8 +46,8 @@ class ProfileController extends Controller
 
         return $this->sendResponse(
             [
-                'name' => auth()->name,
-                'email' => auth()->email
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email
             ],
             "User password updated successfully",
             200

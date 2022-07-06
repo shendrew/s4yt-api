@@ -16,7 +16,9 @@ class CreateCoinsTable extends Migration
         Schema::create('coins', function (Blueprint $table) {
             $table->id();
             $table->boolean('available')->default(true);
-            $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->foreignId('coin_type_id')->constrained('coin_types');
+            $table->foreignId('player_id')->constrained('players');
+            $table->foreignId('raffle_item_id')->nullable()->constrained('raffle_items');
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeNullableUsersTable extends Migration
+class CreateVersionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class ChangeNullableUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table)
-        {
-            $table->foreignId('education_id')->nullable()->change();
+        Schema::create('versions', function (Blueprint $table) {
+            $table->id();
+            $table->integer('year');
+            $table->integer('month');
+            $table->boolean('active')->default(0);
         });
     }
 
@@ -26,8 +28,6 @@ class ChangeNullableUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('education_id')->change();
-        });
+        Schema::dropIfExists('versions');
     }
 }

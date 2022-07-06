@@ -1,22 +1,23 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Traits\HasCoins;
 use App\Traits\Uuids;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use App\Traits\Referable;
 use Laravel\Passport\HasApiTokens;
-use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Uuids, Referable, HasApiTokens, HasCoins;
+    use Notifiable, HasRoles, Uuids, HasApiTokens;
+
+    const SUPER_ADMIN_ROLE = 'super_admin';
+    const ADMIN_ROLE = 'admin';
+    const EVENT_PARTNER_ROLE = 'event_partner';
+    const RAFFLE_PARTNER_ROLE = 'raffle_partner';
+    const PLAYER_ROLE = 'player';
+    const BU_PLAYER_ROLE = 'bu_player';
 
     /**
      * The attributes that are mass assignable.
@@ -27,12 +28,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'school',
-        'education_id',
-        'grade_id',
-        'country',
-        'state',
-        'city_id'
     ];
 
     /**
@@ -53,19 +48,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function education() : HasOne {
-        return $this->HasOne(Education::class);
-    }
-
-    public function grade() : HasOne {
-        return $this->HasOne(Grade::class);
-    }
-
     /**
-     * @return BelongsTo
+     * Get the owning userable model.
      */
-    public function role(): BelongsTo
+    public function userable()
     {
-        return $this->belongsTo(Role::class);
+        return $this->morphTo();
+    }
+
+    public function versions()
+    {
+        return $this->belongsToMany('App\Models\Version');
     }
 }
