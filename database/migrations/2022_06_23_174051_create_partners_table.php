@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoinsTable extends Migration
+class CreatePartnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateCoinsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coins', function (Blueprint $table) {
+        Schema::create('partners', function (Blueprint $table) {
             $table->id();
-            $table->boolean('available')->default(true);
-            $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->string('company_name');
+            $table->integer('partnerable_id')->unsigned()->nullable;
+            $table->string('partnerable_type')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateCoinsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coins');
+        Schema::dropIfExists('sponsors');
     }
 }

@@ -16,9 +16,11 @@ class CreateRaffleItemsTable extends Migration
         Schema::create('raffle_items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->string('slug');
+            $table->text('description')->nullable();
             $table->integer('stock');
-            $table->foreignId('version_user_id')->constrained('version_users');
+            $table->boolean('active')->default(0);
+            $table->foreignId('raffle_partner_id')->constrained('raffle_partners');
             $table->timestamps();
         });
     }

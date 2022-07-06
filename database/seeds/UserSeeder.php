@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -11,31 +12,18 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $super_admin = \App\User::create([
+        $super_admin = User::create([
             'name' => config('app.super_admin.name'),
             'email' => config('app.super_admin.email'),
             'password' => \Illuminate\Support\Facades\Hash::make(config('app.super_admin.password'))
         ]);
+        $super_admin->assignRole(User::SUPER_ADMIN_ROLE);
 
-        $super_admin->assignRole(\App\Role::SUPER_ADMIN);
-
-
-        $admin = \App\User::create([
+        $admin = User::create([
             'name' => config('app.admin.name'),
             'email' => config('app.admin.email'),
             'password' => \Illuminate\Support\Facades\Hash::make(config('app.admin.password'))
         ]);
-
-        $admin->assignRole(\App\Role::ADMIN);
-
-        if (env('APP_ENV') != 'production')
-        {
-            factory('App\User', 8)->create()->each(function ($user){
-                $user->assignRole(\App\Role::PLAYER);
-            });
-            factory('App\User', 2)->create()->each(function ($user){
-                $user->assignRole(\App\Role::BU_PLAYER);
-            });
-        }
+        $admin->assignRole(User::ADMIN_ROLE);
     }
 }

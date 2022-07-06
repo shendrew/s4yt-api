@@ -1,24 +1,23 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Traits\HasCoins;
 use App\Traits\Uuids;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use App\Traits\Referable;
 use Laravel\Passport\HasApiTokens;
-use Spatie\Permission\Models\Role;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Uuids, Referable, HasApiTokens, HasCoins;
+    use Notifiable, HasRoles, Uuids, HasApiTokens;
+
+    const SUPER_ADMIN_ROLE = 'super_admin';
+    const ADMIN_ROLE = 'admin';
+    const EVENT_PARTNER_ROLE = 'event_partner';
+    const RAFFLE_PARTNER_ROLE = 'raffle_partner';
+    const PLAYER_ROLE = 'player';
+    const BU_PLAYER_ROLE = 'bu_player';
 
     /**
      * The attributes that are mass assignable.
@@ -50,19 +49,15 @@ class User extends Authenticatable
     ];
 
     /**
-     * @return BelongsTo
+     * Get the owning userable model.
      */
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class);
-    }
-
-    public function version_users() : BelongsToMany {
-        return $this->belongsToMany(Version_User::class);
-    }
-
     public function userable()
     {
         return $this->morphTo();
+    }
+
+    public function versions()
+    {
+        return $this->belongsToMany('App\Models\Version');
     }
 }

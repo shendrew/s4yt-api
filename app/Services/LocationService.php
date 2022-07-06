@@ -26,12 +26,12 @@ class LocationService
 
     public static function getStates(string $ciso)
     {
-        return static::$client->get(config('cities_api.base_url') . $ciso . 'states');
+        return static::$client->get(config('cities_api.base_url') . 'countries/' . $ciso . '/states');
     }
 
     public static function getCities(string $ciso, string $siso)
     {
-        return static::$client->get(config('cities_api.base_url') . $ciso . '/states' . '/' . $siso . '/cities');
+        return static::$client->get(config('cities_api.base_url') . 'countries/' . $ciso . '/states' . '/' . $siso . '/cities');
     }
 
     public static function getCiso(string $userCountry, array $countries)

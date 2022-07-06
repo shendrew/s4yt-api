@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartnerSponsorsTable extends Migration
+class CreateCoinTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreatePartnerSponsorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('partner_sponsors', function (Blueprint $table) {
+        Schema::create('coin_types', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('event', 50);
+            $table->text('description')->nullable();
+            $table->boolean('admin_panel')->default(0);
         });
     }
 
@@ -26,6 +28,6 @@ class CreatePartnerSponsorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partner_sponsors');
+        Schema::dropIfExists('coin_types');
     }
 }

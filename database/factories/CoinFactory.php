@@ -2,11 +2,12 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Coin;
+use App\Models\Coin;
 use Faker\Generator as Faker;
 
 $factory->define(Coin::class, function (Faker $faker) {
     return [
-        'user_id' => (App\User::inRandomOrder()->first())->id
+        'player_id' => (App\Models\Player::inRandomOrder()->first())->id,
+        'coin_type_id' => (App\Models\CoinType::getTypeByKey(\App\Models\CoinType::TYPE_REGISTER))
     ];
 });

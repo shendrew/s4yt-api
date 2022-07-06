@@ -3,11 +3,12 @@
 namespace App\Services;
 
 
-use App\Coin;
-use App\Configuration;
-use App\Role;
-use App\User;
-use App\Player;
+use App\Models\Coin;
+use App\Models\CoinType;
+use App\Models\Configuration;
+use App\Models\User;
+use App\Models\Player;
+use App\Models\Version;
 use Illuminate\Support\Facades\Hash;
 
 class PlayerService
@@ -18,37 +19,40 @@ class PlayerService
      *
      * @param array $data
      * @param int $coins
+     * @param bool $admin
      * @return User
      */
-    public function addPlayer(array $data, int $coins, bool $admin = false): User
+    public function addPlayer(array $data, int $coins, bool $admin = false): Player
     {
         // Insert record in table users
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $admin ? Hash::make(config('app.default_pass')) : Hash::make($data['password']),            
+            'password' => $admin ? Hash::make(config('app.default_pass')) : Hash::make($data['password']),
         ]);
 
         $player = Player::create([
-            'education' => $data['education'],
-            'grade_id' => $data['grade'],
-            'country' => $data['country'],
-            'state' => $data['state'],
-            'city_id' => $data['city']
+            'education_id' => $data['education_id'],
+            'grade_id' => $data['grade_id'],
+            'country_iso' => $data['country_iso'],
+            'state_iso' => $data['state_iso'],
+            'city_id' => $data['city_id']
         ]);
 
         $player->school =  $data['institution'] ?? null;
         $player->save();
+        $player->user()->save($user);
+        $user->versions()->attach(Version::currentVersion());
 
         // Assign role
         if($admin) {
             $user->assignRole($data["role"]);
         } else {
-            $user->assignRole(Role::PLAYER);
+            $user->assignRole(User::PLAYER_ROLE);
         }
 
         // Add default coins
-        $this->addCoinsToStudent($coins, $user->id);
+        $this->addCoinsToPlayer($coins, $player->id, CoinType::getTypeByKey(CoinType::TYPE_REGISTER));
 
         // Return created object
         return $player;
@@ -59,9 +63,13 @@ class PlayerService
      *
      * @param int $coins
      * @param string $player_id
+     * @param int $coin_type_id
      */
-    private function addCoinsToStudent(int $coins, string $user)
+    private function addCoinsToPlayer(int $coins, string $player_id, int $coin_type_id)
     {
-        factory(Coin::class, $coins)->create(['user_id' => $user_id]);
+        factory(Coin::class, $coins)->create([
+            'player_id' => $player_id,
+            'coin_type_id' => $coin_type_id
+        ]);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVersionUsersTable extends Migration
+class CreateConfigurationVersionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateVersionUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('version_users', function (Blueprint $table) {
+        Schema::create('configuration_version', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->foreignUuid('user_id')->constrained('users');
+            $table->string('value', 100);
             $table->foreignId('version_id')->constrained('versions');
+            $table->foreignId('configuration_id')->constrained('configurations');
+            $table->foreignUuid('created_by')->constrained('users');
+            $table->foreignUuid('updated_by')->nullable()->constrained('users');
         });
     }
 
@@ -28,6 +30,6 @@ class CreateVersionUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('version_users');
+        Schema::dropIfExists('configuration_versions');
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\User;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\UpdateProfileRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Http\JsonResponse;
 
@@ -27,8 +27,8 @@ class ProfileController extends Controller
 
         return $this->sendResponse(
             [
-                'name' => auth()->name,
-                'email' => auth()->email
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email
             ],
             "User information updated successfully",
             200
@@ -46,8 +46,8 @@ class ProfileController extends Controller
 
         return $this->sendResponse(
             [
-                'name' => auth()->name,
-                'email' => auth()->email
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email
             ],
             "User password updated successfully",
             200

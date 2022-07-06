@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRaffleSponsorsTable extends Migration
+class CreateRafflePartnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateRaffleSponsorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('raffle_sponsors', function (Blueprint $table) {
+        Schema::create('raffle_partners', function (Blueprint $table) {
             $table->id();
+            $table->string('short_description')->nullable();
+            $table->integer('items_confirmed')->default(false);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }
