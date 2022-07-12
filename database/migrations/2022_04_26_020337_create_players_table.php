@@ -16,7 +16,7 @@ class CreatePlayersTable extends Migration
         Schema::create('players', function (Blueprint $table) {
             $table->id();
             $table->foreignId('grade_id')->constrained('grades');
-            $table->foreignId('education_id')->constrained('educations');
+            $table->foreignId('education_id')->constrained('education');
             $table->string('school')->nullable();
             $table->string('country_iso',3);
             $table->string('state_iso', 3);
