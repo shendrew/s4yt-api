@@ -19,12 +19,12 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // Location services
-Route::get('/location/countries', [\App\Http\Controllers\Api\LocationController::class, 'getCountries']);
-Route::get('/location/states', [\App\Http\Controllers\Api\LocationController::class, 'getStates'])->name('location.states');
-Route::get('/location/cities', [\App\Http\Controllers\Api\LocationController::class, 'getCities'])->name('location.cities');
+Route::get('/location/countries', [\App\Http\Controllers\Api\RegisterController::class, 'getCountries']);
+Route::get('/location/states', [\App\Http\Controllers\Api\RegisterController::class, 'getStates'])->name('location.states');
+Route::get('/location/cities', [\App\Http\Controllers\Api\RegisterController::class, 'getCities'])->name('location.cities');
+Route::get('/educations', [\App\Http\Controllers\Api\RegisterController::class, 'getEducations'])->name('education.index');
+Route::get('/grades', [\App\Http\Controllers\Api\RegisterController::class, 'getGrades'])->name('grades.index');
 
 Route::middleware('auth:api')->group(function () {
-
-
     Route::post('/logout', [AuthController::class, 'logout']);;
 });
