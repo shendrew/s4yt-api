@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Education;
-use App\Grade;
+use App\Models\Education;
+use App\Models\Grade;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StatesRequest;
 use App\Http\Requests\CitiesRequest;
