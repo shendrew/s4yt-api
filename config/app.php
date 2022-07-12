@@ -2,6 +2,20 @@
 
 return [
 
+    'super_admin' => [
+        'name' => env('SUPER_ADMIN_NAME', 'super_admin'),
+        'email' => env('SUPER_ADMIN_EMAIL', 'superadmin@s4yt.com'),
+        'password' => env('SUPER_ADMIN_PASS', 'qwerty123'),
+    ],
+
+    'admin' => [
+        'name' => env('ADMIN_NAME', 'admin'),
+        'email' => env('ADMIN_EMAIL', 'admin@s4yt.com'),
+        'password' => env('ADMIN_PASS', 'qwerty123'),
+    ],
+
+    'default_pass' => env('DEFAULT_PASS', 'bC59CFkpi^FMOc'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -67,7 +81,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'America/Toronto',
 
     /*
     |--------------------------------------------------------------------------
@@ -174,6 +188,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
 
     ],
 
