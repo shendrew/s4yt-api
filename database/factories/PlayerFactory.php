@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 $factory->define(\App\Models\Player::class, function (Faker $faker) {
 
     $gradeIDs = DB::table('grades')->pluck('id');
-    $educationIDs = DB::table('educations')->pluck('id');
+    $educationIDs = DB::table('education')->pluck('id');
 
     return [
         'grade_id' => $faker->randomElement($gradeIDs),
