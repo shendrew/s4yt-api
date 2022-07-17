@@ -16,7 +16,7 @@ class GradeSeeder extends Seeder
             ['name' => '9th grade'],
             ['name' => '10th grade'],
             ['name' => '11th grade'],
-            ['name' => '12ve grade']
+            ['name' => '12th grade']
         ];
 
         DB::table('grades')->insert($grades);
