@@ -8,7 +8,7 @@ use App\Models\Grade;
 use App\Role as RoleModel;
 use App\Services\LocationService;
 use App\Services\PlayerService;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
