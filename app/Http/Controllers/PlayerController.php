@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Configuration;
-use App\Education;
-use App\Grade;
+use App\Models\Configuration;
+use App\Models\Education;
+use App\Models\Grade;
 use App\Role as RoleModel;
 use App\Services\LocationService;
 use App\Services\PlayerService;
@@ -17,7 +17,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StorePlayerRequest;
 use App\Http\Requests\UpdatePlayerRequest;
 use Spatie\Permission\Models\Role;
-use App\Coin;
+use App\Models\Coin;
 
 class PlayerController extends Controller
 {
@@ -33,7 +33,7 @@ class PlayerController extends Controller
             $q->whereIn('name', [RoleModel::BU_PLAYER, RoleModel::PLAYER]);
         });
 
-        $players = $users->paginate(20);
+        $users = $players->paginate(20);
         return view('admin.players.index',compact('players'));
     }
 
