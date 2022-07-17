@@ -30,10 +30,10 @@ class PlayerController extends Controller
     public function index(Request $request) : View
     {
         $users = User::whereHas('roles', function($q) {
-            $q->whereIn('name', [RoleModel::BU_PLAYER, RoleModel::PLAYER]);
+            $q->whereIn('name', [User::BU_PLAYER_ROLE, User::PLAYER_ROLE]);
         });
 
-        $users = $players->paginate(20);
+        $players = $users->paginate(20);
         return view('admin.players.index',compact('players'));
     }
 
@@ -48,7 +48,7 @@ class PlayerController extends Controller
         $educations = Education::all();
         $grades =  Grade::all();
         $countries = ($locationService->getCountries())->json();
-        $roles = Role::whereIn('name', [RoleModel::PLAYER, RoleModel::BU_PLAYER])->get();
+        $roles = Role::whereIn('name', [User::PLAYER_ROLE, User::BU_PLAYER_ROLE])->get();
         return view('admin.players.create', compact('educations', 'countries', 'grades', 'roles'));
     }
 
@@ -61,7 +61,7 @@ class PlayerController extends Controller
     public function store(StorePlayerRequest $request, PlayerService $playerService): RedirectResponse
     {
         $validated = $request->validated();
-        $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::INITIAL_COINS), true);
+        $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::REGISTER_COINS), true);
         return redirect()->route('player.index')->with('success', 'Player added successfully.');
     }
 
@@ -111,7 +111,7 @@ class PlayerController extends Controller
         $educations = Education::all();
         $countries = ($locationService->getCountries())->json();
         $ciso = LocationService::getCiso($user->country, $countries);
-        $roles = Role::whereIn('name', [RoleModel::PLAYER, RoleModel::BU_PLAYER])->get();
+        $roles = Role::whereIn('name', [User::PLAYER_ROLE, User::BU_PLAYER_ROLE])->get();
         return view('admin.players.edit', compact('user', 'grades', 'educations', 'countries', 'roles', 'ciso'));
     }
 
