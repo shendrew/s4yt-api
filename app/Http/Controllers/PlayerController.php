@@ -18,6 +18,8 @@ use App\Http\Requests\StorePlayerRequest;
 use App\Http\Requests\UpdatePlayerRequest;
 use Spatie\Permission\Models\Role;
 use App\Models\Coin;
+use App\Models\Player;
+use App\Models\UserVersion;
 
 class PlayerController extends Controller
 {
@@ -122,14 +124,17 @@ class PlayerController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        $player = User::find($id);
+        $user = User::find($id);
+        $player = $user->userable;
 
         if(!$player) {
             return redirect()->route('player.index')->with('error', 'Player not found.');
         }
 
-        Coin::where('user_id', $player->id)->delete();
-        User::destroy($player->id);
+        Coin::where('player_id', $player->id)->delete();
+        UserVersion::where('user_id', $user->id)->delete();
+        Player::destroy($player->id);
+        User::destroy($user->id);
         return redirect()->route('player.index')->with('success', 'Player deleted successfully.');
     }
 }
