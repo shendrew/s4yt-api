@@ -107,12 +107,17 @@ class PlayerController extends Controller
     public function edit($id, LocationService $locationService): View
     {
         $user = User::find($id);
+        $player = $user->userable;
         $grades = Grade::all();
-        $educations = Education::all();
-        $countries = ($locationService->getCountries())->json();
-        $ciso = LocationService::getCiso($user->country, $countries);
+        $educations = Education::all();        
+        $location_data = array(
+            'country_iso' => $player->country_iso,
+            'state_iso' => $player->state_iso,
+            'city_id' => $player->city_id
+        );
+        $form_data = $locationService->getLocationData($location_data);
         $roles = Role::whereIn('name', [User::PLAYER_ROLE, User::BU_PLAYER_ROLE])->get();
-        return view('admin.players.edit', compact('user', 'grades', 'educations', 'countries', 'roles', 'ciso'));
+        return view('admin.players.edit', compact('user', 'player', 'grades', 'educations', 'roles', 'form_data'));
     }
 
     public function destroy($id): RedirectResponse
