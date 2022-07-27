@@ -18,6 +18,8 @@ use App\Http\Requests\StorePlayerRequest;
 use App\Http\Requests\UpdatePlayerRequest;
 use Spatie\Permission\Models\Role;
 use App\Models\Coin;
+use App\Models\Player;
+use App\Models\UserVersion;
 
 class PlayerController extends Controller
 {
@@ -107,24 +109,32 @@ class PlayerController extends Controller
     public function edit($id, LocationService $locationService): View
     {
         $user = User::find($id);
+        $player = $user->userable;
         $grades = Grade::all();
-        $educations = Education::all();
-        $countries = ($locationService->getCountries())->json();
-        $ciso = LocationService::getCiso($user->country, $countries);
+        $educations = Education::all();        
+        $location_data = array(
+            'country_iso' => $player->country_iso,
+            'state_iso' => $player->state_iso,
+            'city_id' => $player->city_id
+        );
+        $form_data = $locationService->getLocationData($location_data);
         $roles = Role::whereIn('name', [User::PLAYER_ROLE, User::BU_PLAYER_ROLE])->get();
-        return view('admin.players.edit', compact('user', 'grades', 'educations', 'countries', 'roles', 'ciso'));
+        return view('admin.players.edit', compact('user', 'player', 'grades', 'educations', 'roles', 'form_data'));
     }
 
     public function destroy($id): RedirectResponse
     {
-        $player = User::find($id);
+        $user = User::find($id);
+        $player = $user->userable;
 
         if(!$player) {
             return redirect()->route('player.index')->with('error', 'Player not found.');
         }
 
-        Coin::where('user_id', $player->id)->delete();
-        User::destroy($player->id);
+        Coin::where('player_id', $player->id)->delete();
+        UserVersion::where('user_id', $user->id)->delete();
+        Player::destroy($player->id);
+        User::destroy($user->id);
         return redirect()->route('player.index')->with('success', 'Player deleted successfully.');
     }
 }
