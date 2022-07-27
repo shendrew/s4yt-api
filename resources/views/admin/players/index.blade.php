@@ -33,9 +33,12 @@
                             <td>
                                 <div class="container d-flex justify-content-center">
                                     @role('super_admin|admin')
-                                        <a type="submit" class="btn btn-primary text-white" href="{{ route('player.edit', $player->id) }}">
-                                            <i class="fas fa-pencil-alt"></i>
+                                        <a type="submit" class="btn btn-primary ml-2 text-white ms-2" href="{{ route('player.show', $player->id) }}">
+                                            <i class="fa-solid fa-eye"></i>
                                         </a>
+                                        <a type="submit" class="btn btn-primary ml-2 text-white ms-2" href="{{ route('player.edit', $player->id) }}">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>    
                                         <form action="{{ route('player.destroy', $player->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
