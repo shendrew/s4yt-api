@@ -32,4 +32,20 @@ class Player extends Model implements HasMedia
     {
         return $this->morphOne('App\Models\User', 'userable');
     }
+
+    /**
+     * Get the player's education.
+     */
+    public function education()
+    {
+        return $this->belongsTo('App\Models\Education');
+    }
+
+    /**
+     * Get the player's grade.
+     */
+    public function grade()
+    {
+        return $this->belongsTo('App\Models\Grade');
+    }
 }

@@ -67,10 +67,17 @@ class PlayerController extends Controller
         return redirect()->route('player.index')->with('success', 'Player added successfully.');
     }
 
-    public function show($id): View
+    public function show($id, LocationService $locationService): View
     {
         $user = User::find($id);
-        return view('admin.players.show');
+        $player = $user->userable;    
+        $location_data = array(
+            'country_iso' => $player->country_iso,
+            'state_iso' => $player->state_iso,
+            'city_id' => $player->city_id
+        );
+        $form_data = $locationService->getLocationData($location_data);
+        return view('admin.players.show', compact('user', 'player', 'form_data'));
     }
 
     /**
