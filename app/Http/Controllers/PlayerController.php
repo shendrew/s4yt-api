@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Configuration;
 use App\Models\Education;
 use App\Models\Grade;
-use App\Role as RoleModel;
 use App\Services\LocationService;
 use App\Services\PlayerService;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StorePlayerRequest;
@@ -58,6 +55,7 @@ class PlayerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StorePlayerRequest $request
+     * @param PlayerService $playerService
      * @return RedirectResponse
      */
     public function store(StorePlayerRequest $request, PlayerService $playerService): RedirectResponse
@@ -70,7 +68,7 @@ class PlayerController extends Controller
     public function show($id, LocationService $locationService): View
     {
         $user = User::find($id);
-        $player = $user->userable;    
+        $player = $user->userable;
         $location_data = array(
             'country_iso' => $player->country_iso,
             'state_iso' => $player->state_iso,
@@ -118,7 +116,7 @@ class PlayerController extends Controller
         $user = User::find($id);
         $player = $user->userable;
         $grades = Grade::all();
-        $educations = Education::all();        
+        $educations = Education::all();
         $location_data = array(
             'country_iso' => $player->country_iso,
             'state_iso' => $player->state_iso,

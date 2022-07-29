@@ -64,10 +64,11 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="country">Country (Required)</label>
+                    <input type="text" id="country_iso" name="country_iso" hidden>
                     <input type="text" class="form-control" list="countries" id="country" name="country" placeholder="Type to search..." aria-describedby="country_error">
                     <datalist id="countries">
                         @foreach($countries as $country)
-                            <option value="{{ $country['name'] }}" data-iso="{{ $country['iso2'] }}" ></option>
+                            <option value="{{ $country['name'] }}" data-iso="{{ $country['iso2'] }}"></option>
                         @endforeach
                     </datalist>
                     @if ($errors->has('country'))
@@ -148,6 +149,9 @@
                 stateSpinner.show();
                 // Get data
                 const ciso = option.data('iso');
+                const country_iso_input = $("#country_iso");
+                country_iso_input.val(ciso);
+                console.log(country_iso_input.val());
 
                 $.ajaxSetup({
                     headers: {
