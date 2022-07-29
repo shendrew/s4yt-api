@@ -17,19 +17,19 @@
             <table class="table table-striped ">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Name</th>
+                    <th scope="col" class="text-center">Email</th>
+                    <th scope="col" class="text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 @if(count($players) > 0)
                     @foreach($players as $player)
                         <tr>
-                            <td>{{ explode('-',$player->id)[0] }}</td>
-                            <td>{{ $player->name }}</td>
-                            <td>{{ $player->email }}</td>
+                            <td class="text-center">{{ explode('-',$player->id)[0] }}</td>
+                            <td class="text-center">{{ $player->name }}</td>
+                            <td class="text-center">{{ $player->email }}</td>
                             <td>
                                 <div class="container d-flex justify-content-center">
                                     @role('super_admin|admin')
@@ -38,7 +38,7 @@
                                         </a>
                                         <a type="submit" class="btn btn-primary ml-2 text-white ms-2" href="{{ route('player.edit', $player->id) }}">
                                             <i class="fas fa-pencil-alt"></i>
-                                        </a>    
+                                        </a>
                                         <form action="{{ route('player.destroy', $player->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')

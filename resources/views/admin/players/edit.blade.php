@@ -38,13 +38,13 @@
                     <select class="form-select form-control" aria-label="Default select example" id="education" name="education">
                         <option value="0">Choose an option</option>
                         @foreach($educations as $education)
-                            <option value="{{ $education->id }}" {{ $education->id == $user->education_id ? "selected" : "" }}>{{ $education->name }}</option>
+                            <option value="{{ $education->id }}" {{ $education->id == $player->education_id ? "selected" : "" }}>{{ $education->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group mt-2" id="institution_input">
                     <label for="institution">Institution</label>
-                    <input type="text" class="form-control" id="institution" name="institution" value="{{ $user->school }}">
+                    <input type="text" class="form-control" id="institution" name="institution" value="{{ $player->school }}">
                     @if ($errors->has('institution'))
                         <small id="institution_error" class="form-text text-danger">{{ $errors->first('institution') }}</small>
                     @endif
@@ -54,7 +54,7 @@
                     <select class="form-select form-control" aria-label="Default select example" id="grade" name="grade">
                         <option value="0" selected>Choose an option</option>
                         @foreach($grades as $grade)
-                            <option value="{{ $grade->id }}" {{$grade->id == $user->grade_id ? "selected" : "" }}>{{ $grade->name }}</option>
+                            <option value="{{ $grade->id }}" {{$grade->id == $player->grade_id ? "selected" : "" }}>{{ $grade->name }}</option>
                         @endforeach
                     </select>
                     @if ($errors->has('grade'))
@@ -63,6 +63,7 @@
                 </div>
                 <div class="form-group mt-2">
                     <label for="country">Country (Required)</label>
+                    <input type="text" id="country_iso" name="country_iso" hidden>
                     <input type="text" class="form-control" list="countries" id="country" name="country" aria-describedby="country_error" value="{{ $form_data['country_name'] }}" data-iso="{{ $player->country_iso }}">
                     <datalist id="countries">
                         @foreach($form_data['countries'] as $country)
@@ -144,6 +145,8 @@
             const ciso = $('#country').data('iso');
             const siso = $('#state').data('iso');
             const city_id =  $('#city').data('id');
+            const country_iso_input = $("#country_iso");
+            country_iso_input.val(ciso);
 
             $.ajaxSetup({
                 headers: {

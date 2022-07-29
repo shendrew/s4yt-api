@@ -151,7 +151,6 @@
                 const ciso = option.data('iso');
                 const country_iso_input = $("#country_iso");
                 country_iso_input.val(ciso);
-                console.log(country_iso_input.val());
 
                 $.ajaxSetup({
                     headers: {

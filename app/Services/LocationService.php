@@ -40,6 +40,7 @@ class LocationService
         $countries = (self::getCountries())->json();
         $states = null;
         $cities = null;
+
         foreach($countries as $country) {
             if($country['iso2'] == $location_data['country_iso']){
                 $location['country_name'] = $country['name'];

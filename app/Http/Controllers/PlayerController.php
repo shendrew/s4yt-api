@@ -83,25 +83,25 @@ class PlayerController extends Controller
      *
      * @param UpdatePlayerRequest $request
      * @param $id
+     * @param PlayerService $playerService
      * @return RedirectResponse
      */
     public function update(UpdatePlayerRequest $request, $id, PlayerService $playerService): RedirectResponse
     {
         $validated = $request->validated();
-        $player = User::find($id);
+        $user = User::find($id);
 
-        if(!$player) {
+        if(!$user) {
             return redirect()->route('player.index')->with('error', 'Player not found.');
         }
 
-        if($player->email != $validated['email']) {
+        if($user->email != $validated['email']) {
             $request->validate([
                 'email' => 'required|string|email|unique:users',
             ]);
         }
 
-        $playerService->updatePlayer($validated, $player);
-
+        $playerService->updatePlayer($validated, $user, true);
         return redirect()->route('player.index')->with('success', 'Player updated successfully.');
     }
 

@@ -72,4 +72,33 @@ class PlayerService
             'coin_type_id' => $coin_type_id
         ]);
     }
+
+    /**
+     * Method updates player's data
+     * @param array $form_data
+     * @param User $user
+     * @param bool $admin
+     */
+    public function updatePlayer(array $form_data, User $user, bool $admin = false)
+    {
+        $user->name = $form_data['name'];
+        $user->email = $form_data['email'];
+        $user->save();
+
+        $player = $user->userable;
+        $player->education_id = $form_data['education'];
+        $player->grade_id = $form_data['grade'];
+        $player->country_iso = $form_data['country_iso'];
+        $player->state_iso = $form_data['state'];
+        $player->city_id = $form_data['city'];
+        $player->school =  $form_data['institution'] ?? null;
+        $player->save();
+
+        // Assign role
+        if($admin) {
+            $user->assignRole($form_data["role"]);
+        }
+
+        return $player;
+    }
 }
