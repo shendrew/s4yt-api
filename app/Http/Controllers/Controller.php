@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -20,7 +21,7 @@ class Controller extends BaseController
      * @param int $code
      * @return JsonResponse
      */
-    public function sendResponse($response_data, $message, int $code = 200) : JsonResponse
+    public function sendResponse($response_data, $message, int $code = Response::HTTP_OK) : JsonResponse
     {
         $response = [
             'success' => true,
@@ -38,7 +39,7 @@ class Controller extends BaseController
      * @param int $code
      * @return JsonResponse
      */
-    public function sendError(string $error_message, array $error_details = [], int $code = 404): JsonResponse
+    public function sendError(string $error_message, array $error_details = [], int $code = Response::HTTP_NOT_FOUND): JsonResponse
     {
         $response = [
             'success' => false,

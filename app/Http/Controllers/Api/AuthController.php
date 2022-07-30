@@ -9,6 +9,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -25,15 +26,15 @@ class AuthController extends Controller
         $validated = $request->validated();
         $player = $playerService->addPlayer($validated, Configuration::getValueByKey(Configuration::REGISTER_COINS));
 
-        Log::info('User {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->email]);
+        Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->email]);
 
         return $this->sendResponse(
             [
-                'name' => $player->user->name,
+                'uuid' => $player->user->id,
                 'email' => $player->user->email
             ],
-            "User registered successfully",
-            201
+            "Player registered successfully",
+            Response::HTTP_CREATED
         );
     }
 
@@ -41,24 +42,24 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $user= User::where('email', $validated['email'])->first();
+        $user= User::where('id', $validated['id'])->first();
 
         if(!$user) {
-            return $this->sendError('User not registered', [], 401);
+            return $this->sendError('Player not registered', [], Response::HTTP_NOT_FOUND);
         }
 
-        if(!Hash::check($validated['password'], $user->password)) {
-            return $this->sendError('Credentials not valid', [], 401);
+        if(!auth()->attempt(['id' => $validated['id'], 'password' => $validated['password']])) {
+            return $this->sendError('Credentials not valid', [], Response::HTTP_UNAUTHORIZED);
         }
 
-        $token = $user->createToken(env('APP_NAME'))->accessToken;
+        $token = auth()->user->createToken(env('APP_NAME'))->accessToken;
 
         return $this->sendResponse(
             [
                 'auth' => 'Bearer',
                 'token' => $token,
             ],
-            "User logged in successfully"
+            "Player logged in successfully"
         );
     }
 
@@ -68,7 +69,7 @@ class AuthController extends Controller
 
         return $this->sendResponse(
             null,
-            "User logged out successfully"
+            "Player logged out successfully"
         );
     }
 }
