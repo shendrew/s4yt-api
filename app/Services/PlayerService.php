@@ -32,11 +32,11 @@ class PlayerService
         ]);
 
         $player = Player::create([
-            'education_id' => $data['education'],
-            'grade_id' => $data['grade'],
+            'education_id' => $data['education_id'],
+            'grade_id' => $data['grade_id'],
             'country_iso' => $data['country_iso'],
-            'state_iso' => $data['state'],
-            'city_id' => $data['city']
+            'state_iso' => $data['state_iso'],
+            'city_id' => $data['city_id']
         ]);
 
         $player->school =  $data['institution'] ?? null;

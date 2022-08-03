@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+// auth
+Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
+Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+Route::get('/email/verify/{id}', [\App\Http\Controllers\Api\AuthController::class, 'verify'])->name('player.verify');
 
-// Location services
+// player data endpoints
 Route::get('/location/countries', [\App\Http\Controllers\Api\RegisterController::class, 'getCountries']);
 Route::get('/location/states', [\App\Http\Controllers\Api\RegisterController::class, 'getStates'])->name('location.states');
 Route::get('/location/cities', [\App\Http\Controllers\Api\RegisterController::class, 'getCities'])->name('location.cities');
@@ -26,5 +27,5 @@ Route::get('/educations', [\App\Http\Controllers\Api\RegisterController::class, 
 Route::get('/grades', [\App\Http\Controllers\Api\RegisterController::class, 'getGrades'])->name('grades.index');
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);;
+    Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);;
 });

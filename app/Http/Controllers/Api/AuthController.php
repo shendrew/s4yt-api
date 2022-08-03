@@ -6,9 +6,12 @@ use App\Models\Configuration;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Notifications\VerifyEmail;
 use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +31,8 @@ class AuthController extends Controller
 
         Log::info('Player {$player->name} registered successfully.', ['id' => $player->id, 'email' => $player->email]);
 
+        $player->user->notify(new VerifyEmail());
+
         return $this->sendResponse(
             [
                 'uuid' => $player->user->id,
@@ -42,13 +47,17 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $user= User::where('id', $validated['id'])->first();
+        $user = User::where('id', $validated['id'])->first();
 
-        if(!$user) {
+        if (!$user) {
             return $this->sendError('Player not registered', [], Response::HTTP_NOT_FOUND);
         }
 
-        if(!auth()->attempt(['id' => $validated['id'], 'password' => $validated['password']])) {
+        if(!$user->hasVerifiedEmail()) {
+            return $this->sendError('Player does not have validated email', [], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (!auth()->attempt(['id' => $validated['id'], 'password' => $validated['password']])) {
             return $this->sendError('Credentials not valid', [], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -71,5 +80,26 @@ class AuthController extends Controller
             null,
             "Player logged out successfully"
         );
+    }
+
+    /**
+     * @param $user_id
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function verify($user_id, Request $request) : RedirectResponse
+    {
+        if (!$request->hasValidSignature()) {
+            return redirect(env('FRONT_URL') . '/email/resend');
+        }
+
+        $user = User::findOrFail($user_id);
+        if ($user->hasVerifiedEmail()) {
+            return redirect(env('FRONT_URL') . '/email-verify/already-success');
+        }
+
+        $user->markEmailAsVerified();
+        //TODO: send welcome email
+        return redirect(env('FRONT_URL') . '/email-verify/success');
     }
 }
