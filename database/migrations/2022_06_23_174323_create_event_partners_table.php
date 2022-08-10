@@ -37,6 +37,6 @@ class CreateEventPartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('business_sponsors');
+        Schema::dropIfExists('event_partners');
     }
 }

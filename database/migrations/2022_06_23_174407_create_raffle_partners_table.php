@@ -29,6 +29,6 @@ class CreateRafflePartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('raffle_sponsors');
+        Schema::dropIfExists('raffle_partners');
     }
 }
