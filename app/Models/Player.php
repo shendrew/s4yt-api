@@ -48,4 +48,14 @@ class Player extends Model implements HasMedia
     {
         return $this->belongsTo('App\Models\Grade');
     }
+
+    public function answer()
+    {
+        return $this->hasMany('App\Models\Answer');
+    }
+
+    public function visit()
+    {
+        return $this->hasMany('App\Models\Visit');
+    }
 }

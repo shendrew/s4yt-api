@@ -14,4 +14,14 @@ class EventPartner extends Model
     protected $fillable = [
         'slug',
     ];
+
+    public function question()
+    {
+        return $this->hasOne('App\Models\Question');
+    }
+
+    public function visit()
+    {
+        return $this->hasMany('App\Models\Visit');
+    }
 }
