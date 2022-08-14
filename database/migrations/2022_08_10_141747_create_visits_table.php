@@ -17,7 +17,6 @@ class CreateVisitsTable extends Migration
             $table->id();
             $table->foreignId('player_id')->constrained('players');
             $table->foreignId('event_partner_id')->constrained('event_partners');
-            $table->dateTime('last_visited')->nullable();
             $table->timestamps();
         });
     }

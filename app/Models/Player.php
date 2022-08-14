@@ -53,9 +53,4 @@ class Player extends Model implements HasMedia
     {
         return $this->hasMany('App\Models\Answer');
     }
-
-    public function visit()
-    {
-        return $this->hasMany('App\Models\Visit');
-    }
 }

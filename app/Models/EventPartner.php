@@ -19,9 +19,4 @@ class EventPartner extends Model
     {
         return $this->hasOne('App\Models\Question');
     }
-
-    public function visit()
-    {
-        return $this->hasMany('App\Models\Visit');
-    }
 }

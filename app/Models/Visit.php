@@ -2,21 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class Visit extends Model
+class Visit extends Pivot
 {
-    protected $fillable = [
-        'last_visited'
-    ];
-
-    public function player()
+    public function scopeEventPartner($query, $event_partner_id)
     {
-        return $this->belongsTo('App\Models\Player');
+        return $query->where('event_partner_id', $event_partner_id);
     }
 
-    public function event_partner()
+    public function scopePlayer($query, $player_id)
     {
-        return $this->belongsTo('App\Models\EventPartner');
+        return $query->where('player_id', $player_id);
     }
 }
