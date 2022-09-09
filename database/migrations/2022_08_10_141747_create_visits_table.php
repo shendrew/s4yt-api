@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSponsorPartnersTable extends Migration
+class CreateVisitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateSponsorPartnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('sponsor_partners', function (Blueprint $table) {
+        Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->string('short_description')->nullable();
-            $table->text('description')->nullable();
-            $table->boolean('status')->default(0);
+            $table->foreignId('player_id')->constrained('players');
+            $table->foreignId('event_partner_id')->constrained('event_partners');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateSponsorPartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sponsor_partners');
+        Schema::dropIfExists('visits');
     }
 }

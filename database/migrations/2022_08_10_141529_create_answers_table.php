@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSponsorPartnersTable extends Migration
+class CreateAnswersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateSponsorPartnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('sponsor_partners', function (Blueprint $table) {
+        Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->string('short_description')->nullable();
-            $table->text('description')->nullable();
-            $table->boolean('status')->default(0);
+            $table->text('response');
+            $table->foreignId('question_id')->constrained('questions');
+            $table->foreignId('player_id')->constrained('players');
+            $table->boolean('saved')->default(0);
+            $table->boolean('submitted')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateSponsorPartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sponsor_partners');
+        Schema::dropIfExists('answers');
     }
 }
