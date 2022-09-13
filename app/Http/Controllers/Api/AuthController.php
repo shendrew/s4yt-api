@@ -90,6 +90,7 @@ class AuthController extends Controller
     public function verify($user_id, Request $request) : RedirectResponse
     {
         if (!$request->hasValidSignature()) {
+            dd($request->hasValidSignature());
             return redirect(env('FRONT_URL') . '/email/resend');
         }
 

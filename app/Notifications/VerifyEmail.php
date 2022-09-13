@@ -48,7 +48,7 @@ class VerifyEmail extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('Verify Email Address')
             ->line('Please click the button below to verify your email address.')
-            ->action('Verify Email Address', $verificationUrl )
+            ->action('Yes, this is me...duh!', $verificationUrl )
             ->line('If you did not create an account, no further action is required.');
     }
 
@@ -62,7 +62,7 @@ class VerifyEmail extends Notification implements ShouldQueue
     {
         return URL::temporarySignedRoute(
             'player.verify',
-            Carbon::now()->addMinutes(config('auth.verification.expire', 60)),
+            Carbon::now()->addMinutes(intval(config('auth.verification.expire', 60))),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),

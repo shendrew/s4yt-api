@@ -81,7 +81,7 @@ return [
     |
     */
 
-    'timezone' => 'America/Toronto',
+    'timezone' => 'America/St_Johns',
 
     /*
     |--------------------------------------------------------------------------
