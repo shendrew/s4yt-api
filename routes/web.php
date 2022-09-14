@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::middleware('auth')->prefix('/admin')->group(function () {
+    Route::view('/', 'admin');
+    Route::resource('player', 'PlayerController');
+    Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
+});
+
+Route::middleware('auth')->group(function() {
+    Route::get('referral', [App\Http\Controllers\Api\ProfileController::class, 'getReferral']);
+});
