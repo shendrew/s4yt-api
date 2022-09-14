@@ -289,3 +289,21 @@ img {
 .break-all {
     word-break: break-all;
 }
+
+/* Social */
+
+.social {
+    display: flex;
+    justify-content: center;
+}
+.social li {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 0.9em;
+    margin: 0 5%;
+}
+
+.social-icon {
+    width: 20px;
+    height: 20px;
+}
