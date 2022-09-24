@@ -15,9 +15,10 @@ class CreateModalsTable extends Migration
     {
         Schema::create('modals', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
+            $table->string('slug')->unique();
             $table->string('content-type');
-            $table->text('instructions');
+            $table->text('content');
             $table->timestamps();
         });
     }
