@@ -6,7 +6,9 @@ use App\Models\Configuration;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\ResendVerifyRequest;
 use App\Notifications\VerifyEmail;
+use App\Notifications\WelcomeEmail;
 use App\Services\PlayerService;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
@@ -90,16 +92,35 @@ class AuthController extends Controller
     public function verify($user_id, Request $request) : RedirectResponse
     {
         if (!$request->hasValidSignature()) {
-            return redirect(env('FRONT_URL') . '/email/resend');
+            dd($request->hasValidSignature());
+            return redirect(config('app.front_url') . '/verify-resend');
         }
 
         $user = User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
-            return redirect(env('FRONT_URL') . '/email-verify/already-success');
+            return redirect(config('app.front_url') . '/email-verified');
         }
 
         $user->markEmailAsVerified();
-        //TODO: send welcome email
-        return redirect(env('FRONT_URL') . '/email-verify/success');
+        $user->notify(new WelcomeEmail());
+        return redirect(config('app.front_url') . '/email-verify');
+    }
+
+    public function resendVerify(ResendVerifyRequest $request) : JsonResponse
+    {
+        $validated = $request->validated();
+
+        $user = User::where('email', $validated['email'])->first();
+
+        if (!$user) {
+            return $this->sendError('Player not registered', [], Response::HTTP_NOT_FOUND);
+        }
+
+        $user->notify(new VerifyEmail());
+
+        return $this->sendResponse(
+            [],
+            "Mail resend successfully"
+        );
     }
 }
