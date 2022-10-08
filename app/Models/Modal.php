@@ -9,7 +9,7 @@ class Modal extends Model
     protected $fillable = [
         'title',
         'slug',
-        'content-type',
+        'content_type',
         'content',
     ];
 

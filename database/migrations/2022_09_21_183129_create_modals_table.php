@@ -17,7 +17,7 @@ class CreateModalsTable extends Migration
             $table->id();
             $table->string('title')->unique();
             $table->string('slug')->unique();
-            $table->string('content-type');
+            $table->string('content_type');
             $table->text('content');
             $table->timestamps();
         });
