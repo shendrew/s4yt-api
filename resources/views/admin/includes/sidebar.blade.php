@@ -31,5 +31,13 @@
             </a>
         </li>
         @endrole
+        @role('super_admin|admin')
+        <li class="{{ str_starts_with(request()->path(), 'admin/modals') ? 'bg-primary' : ''  }} list-group-item bg-dark">
+            <a class="text-white text-decoration-none sidebar-li" href="{{ route('modal.index') }}">
+                <i class="fas fa-message me-3 fa-lg"></i>
+                Modals
+            </a>
+        </li>
+        @endrole
     </ul>
 </nav>

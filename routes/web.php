@@ -21,6 +21,7 @@ Route::middleware('auth')->prefix('/admin')->group(function () {
     Route::view('/', 'admin');
     Route::resource('player', 'PlayerController');
     Route::resource('configuration', 'ConfigurationController', [ 'only' => ['index', 'edit', 'update']] );
+    Route::resource('modal', 'ModalController');
 });
 
 Route::middleware('auth')->group(function() {

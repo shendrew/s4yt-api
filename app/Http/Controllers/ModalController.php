@@ -4,16 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreModalRequest;
 use App\Http\Requests\UpdateModalRequest;
-use App\Modal;
+use App\Models\Modal;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 
 class ModalController extends Controller
 {
     public function index(): View
     {
-        $modals = Modals::all();
-        $modals->paginate(20);
+        $modals = Modal::paginate(20);
         return view('admin.modals.index', compact('modals'));
     }
 
@@ -38,7 +38,7 @@ class ModalController extends Controller
     public function show($id) : View
     {
         $modal = Modal::find($id);
-        return view('admin.modals.show')->compact('modal');
+        return view('admin.modals.show', compact('modal'));
     }
 
     public function update($id, UpdateModalRequest $request) : RedirectResponse
@@ -46,7 +46,7 @@ class ModalController extends Controller
         $validated = $request->validated();
         $modal=Modal::find($id);
 
-        if ($modal->title != validated['title'])
+        if ($modal->title != $validated['title'])
         {
             $request->validated([
                 'title' => 'required|string|unique:modals',
@@ -61,6 +61,12 @@ class ModalController extends Controller
         $modal->save();
 
         return redirect()->route('modal.index')->with('success', 'Modal updated.');
+    }
+
+    public function edit($id): View
+    {
+        $modal = Modal::find($id);
+        return view('admin.modals.edit', compact('modal'));
     }
 
     public function destroy($id) : RedirectResponse
