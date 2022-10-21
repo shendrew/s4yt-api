@@ -8,7 +8,6 @@ class Answer extends Model
 {
     protected $fillable = [
         'response',
-        'saved',
         'submitted'
     ];
 

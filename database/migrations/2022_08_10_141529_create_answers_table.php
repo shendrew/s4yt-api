@@ -18,7 +18,6 @@ class CreateAnswersTable extends Migration
             $table->text('response');
             $table->foreignId('question_id')->constrained('questions');
             $table->foreignId('player_id')->constrained('players');
-            $table->boolean('saved')->default(0);
             $table->boolean('submitted')->default(0);
             $table->timestamps();
         });
